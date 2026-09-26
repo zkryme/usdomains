@@ -5,28 +5,29 @@ export default function HomePage() {
   return (
     <main>
       <section className="hero">
-        <h1>Find your .usd name</h1>
-        <p className="lede">
-          Search a name, register it for one to ten years, and point it at an Arc address. You pay the yearly price in USDC.
-        </p>
+        <h1>Find a .usd name</h1>
+        <p className="lede">Register it on Arc and point it at an address. You pay the yearly price in USDC.</p>
         <SearchForm />
-        <div className="prices">
-          <div className="price">
-            <span className="muted">3 characters</span>
-            <b>30 USDC</b>
-            <span className="muted">per year</span>
-          </div>
-          <div className="price">
-            <span className="muted">4 characters</span>
-            <b>20 USDC</b>
-            <span className="muted">per year</span>
-          </div>
-          <div className="price">
-            <span className="muted">5 or more</span>
-            <b>10 USDC</b>
-            <span className="muted">per year, up to 32 characters</span>
-          </div>
-        </div>
+        <p className="price-strip">
+          3 characters: 30 USDC/year · 4 characters: 20 USDC/year · 5–32 characters: 10 USDC/year
+        </p>
+      </section>
+      <section className="how" aria-label="How it works">
+        <article>
+          <span>1</span>
+          <h2>Search a name</h2>
+          <p>Check the label, the yearly price, and whether it can be registered.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <h2>Register for 1–10 years</h2>
+          <p>Commit the name, wait at least 60 seconds, then pay the exact USDC quote.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <h2>Set its Arc payment address</h2>
+          <p>The NFT controls the name. Apps that read this registry can then resolve it.</p>
+        </article>
       </section>
       <section className="grid">
         <article className="card">

@@ -102,7 +102,7 @@ export function Portfolio() {
   if (!isConnected || !address) {
     return (
       <article className="card">
-        <h2>Portfolio</h2>
+        <h2>My names</h2>
         <p>Connect an Arc wallet to see names it currently holds.</p>
       </article>
     );
@@ -110,7 +110,7 @@ export function Portfolio() {
 
   return (
     <article className="card stack">
-      <h2>Portfolio</h2>
+      <h2>My names</h2>
       <p>
         Connected wallet <code className="full mono">{address}</code>
       </p>

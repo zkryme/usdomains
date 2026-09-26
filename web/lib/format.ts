@@ -33,3 +33,17 @@ export function txError(error: unknown): string {
   if (error instanceof Error) return error.message;
   return "The transaction failed.";
 }
+
+export function txKind(error: unknown): "rejected" | "failed" {
+  const message = txError(error).toLowerCase();
+  if (
+    message.includes("user rejected") ||
+    message.includes("user denied") ||
+    message.includes("rejected the request") ||
+    message.includes("denied transaction") ||
+    message.includes("action_rejected")
+  ) {
+    return "rejected";
+  }
+  return "failed";
+}

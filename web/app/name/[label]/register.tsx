@@ -11,7 +11,8 @@ import { bytesToHex, isAddress, zeroAddress, type Address, type Hex } from "viem
 import { useAccount, useChainId, usePublicClient, useReadContract, useWriteContract } from "wagmi";
 import { ConfirmAddress } from "@/components/address";
 import { deploymentFor } from "@/lib/deployment";
-import { arcFees, formatUsdc, formatWhen, txError } from "@/lib/format";
+import { arcFees, formatUsdc, formatWhen, txError, txKind } from "@/lib/format";
+import { annualUnits } from "@/lib/pricing";
 import { reservationDisclosure, reservedReason } from "@/lib/reserved";
 
 type Draft = {
@@ -24,14 +25,10 @@ type Draft = {
 
 const ZERO = zeroAddress;
 
+type Notice = { kind: "pending" | "success" | "rejected" | "failed"; detail: string } | null;
+
 function draftKey(chainId: number, label: string, payer: string) {
   return `usd-commit:${chainId}:${label}:${payer.toLowerCase()}`;
-}
-
-function listedAnnual(label: string): string {
-  if (label.length <= 3) return "30";
-  if (label.length === 4) return "20";
-  return "10";
 }
 
 export function RegisterFlow({ raw }: { raw: string }) {
@@ -48,8 +45,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
   const [recipientConfirmed, setRecipientConfirmed] = useState(false);
   const [payConfirmed, setPayConfirmed] = useState(false);
   const [draft, setDraft] = useState<Draft | null>(null);
-  const [status, setStatus] = useState("");
-  const [error, setError] = useState("");
+  const [notice, setNotice] = useState<Notice>(null);
   const [busy, setBusy] = useState(false);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
 
@@ -151,7 +147,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
   async function commit() {
     if (!payer || !publicClient || !isAddress(recipient) || !recipientConfirmed) return;
     setBusy(true);
-    setError("");
+    setNotice({ kind: "pending", detail: "Confirm the commit in your wallet. The name is not registered yet." });
     try {
       const bytes = new Uint8Array(32);
       crypto.getRandomValues(bytes);
@@ -171,14 +167,17 @@ export function RegisterFlow({ raw }: { raw: string }) {
         chainId: deployment.chainId,
         ...fees,
       });
-      setStatus("Waiting for the commit to land.");
+      setNotice({ kind: "pending", detail: "Commit sent. Waiting for Arc to confirm it. The name is not registered yet." });
       await publicClient.waitForTransactionReceipt({ hash });
       const next: Draft = { secret, recipient, years, payer, commitment };
       window.localStorage.setItem(draftKey(deployment.chainId, label, payer), JSON.stringify(next));
       setDraft(next);
-      setStatus("Commit saved in this browser. Wait 60 seconds, then reveal from this same wallet.");
+      setNotice({
+        kind: "success",
+        detail: "Commit confirmed. This name is not registered yet. Wait 60 seconds, then reveal from this same wallet.",
+      });
     } catch (cause) {
-      setError(txError(cause));
+      setNotice(noticeFrom(cause, "The commit did not land. The name was not registered."));
     } finally {
       setBusy(false);
     }
@@ -187,7 +186,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
   async function reveal() {
     if (!draft || !payer || !publicClient || !payConfirmed) return;
     setBusy(true);
-    setError("");
+    setNotice({ kind: "pending", detail: "Confirm the next transaction in your wallet. The name is not registered yet." });
     try {
       const fees = await arcFees(publicClient);
       const allowance = await publicClient.readContract({
@@ -197,7 +196,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
         args: [payer, registrar],
       });
       if (allowance < amount) {
-        setStatus("Approving the exact USDC amount.");
+        setNotice({ kind: "pending", detail: "Approving the exact USDC amount. The name is not registered yet." });
         const approval = await writeContractAsync({
           address: deployment.usdc,
           abi: usdcAbi,
@@ -208,7 +207,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
         });
         await publicClient.waitForTransactionReceipt({ hash: approval });
       }
-      setStatus("Revealing and paying.");
+      setNotice({ kind: "pending", detail: "Confirm the payment in your wallet. The name is not registered until Arc confirms it." });
       const hash = await writeContractAsync({
         address: registrar,
         abi: registrarAbi,
@@ -217,17 +216,26 @@ export function RegisterFlow({ raw }: { raw: string }) {
         chainId: deployment.chainId,
         ...fees,
       });
+      setNotice({ kind: "pending", detail: "Payment sent. Waiting for Arc to confirm it. The name is not registered yet." });
       await publicClient.waitForTransactionReceipt({ hash });
       window.localStorage.removeItem(draftKey(deployment.chainId, label, payer));
       setDraft(null);
-      setStatus("Registered. The NFT is the current control of this name.");
+      setNotice({ kind: "success", detail: "Registered. Arc confirmed the payment, and the NFT is the current control of this name." });
     } catch (cause) {
-      setError(txError(cause));
-      setStatus("The reveal can be retried until the commitment expires. The secret is still in this browser.");
+      const base = noticeFrom(cause, "The payment did not complete. The name was not registered.");
+      setNotice(
+        base.kind === "failed"
+          ? { kind: "failed", detail: `${base.detail} The reveal can be retried until the commitment expires. The secret is still in this browser.` }
+          : base,
+      );
     } finally {
       setBusy(false);
     }
   }
+
+  const perYear = prices.data?.[0] ?? annualUnits(label.length);
+  const total = quote.data ?? perYear * BigInt(years);
+  const networkLabel = !isConnected ? "Not connected" : deployment.network === "mainnet" ? "Arc · 5042" : "Wrong network";
 
   return (
     <div className="grid">
@@ -272,9 +280,29 @@ export function RegisterFlow({ raw }: { raw: string }) {
             ))}
           </select>
         </label>
+        <div className="summary">
+          <h3>Before you confirm</h3>
+          <dl>
+            <dt>Name</dt>
+            <dd>{parsed.name}</dd>
+            <dt>Term</dt>
+            <dd>
+              {years} year{years === 1 ? "" : "s"}
+            </dd>
+            <dt>Annual price</dt>
+            <dd>{formatUsdc(perYear)} USDC</dd>
+            <dt>Total</dt>
+            <dd>{formatUsdc(total)} USDC</dd>
+            <dt>Wallet</dt>
+            <dd>{payer ?? "Not connected"}</dd>
+            <dt>Network</dt>
+            <dd>{networkLabel}</dd>
+          </dl>
+        </div>
         <p className="muted">
-          Price at reveal: {quote.data != null ? `${formatUsdc(amount)} USDC` : "—"}. That is a 6-decimal ERC-20 amount.
-          If a scheduled price arrives before you reveal, the contract charges the new price and pulls that exact amount.
+          {quote.data != null
+            ? `The contract will pull exactly ${formatUsdc(total)} USDC, 6 decimals. If a scheduled price arrives before you reveal, it charges the new price.`
+            : "The listed total uses the current yearly price. Payment is not offered until the contracts are deployed."}
         </p>
 
         <label className="field">
@@ -322,13 +350,16 @@ export function RegisterFlow({ raw }: { raw: string }) {
             </button>
           </div>
         ) : null}
-        {status ? <p>{status}</p> : null}
-        {error ? <p className="error">{error}</p> : null}
+        {notice ? (
+          <p className={`notice ${notice.kind}`} role="status">
+            {notice.detail}
+          </p>
+        ) : null}
       </article>
       <aside className="card stack">
         <h3>Price and grace</h3>
         <p className="muted">
-          Current annual price for this length: {prices.data ? `${formatUsdc(prices.data[0])} USDC` : `${listedAnnual(label)} USDC`}.
+          Current annual price for this length: {prices.data ? `${formatUsdc(prices.data[0])} USDC` : `${formatUsdc(annualUnits(label.length))} USDC`}.
           {prices.data && prices.data[2] > 0n
             ? ` A change to ${formatUsdc(prices.data[1])} USDC is scheduled for ${formatWhen(prices.data[2])}.`
             : " No price change is scheduled."}
@@ -343,7 +374,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
           The commitment waits at least {minWait} seconds and expires after {Math.round(maxWait / 3600)} hours. Keep this
           browser tab; the secret is stored locally for a retry.
         </p>
-        <PriceTable />
+        <p className="price-strip">3 characters: 30 USDC/year · 4 characters: 20 USDC/year · 5–32 characters: 10 USDC/year</p>
       </aside>
     </div>
   );
@@ -417,21 +448,10 @@ function Explanation({
   return <p className="muted">Checking the registrar.</p>;
 }
 
-function PriceTable() {
-  return (
-    <div className="prices">
-      <div className="price">
-        <span className="muted">3 characters</span>
-        <b>30 USDC</b>
-      </div>
-      <div className="price">
-        <span className="muted">4 characters</span>
-        <b>20 USDC</b>
-      </div>
-      <div className="price">
-        <span className="muted">5 to 32</span>
-        <b>10 USDC</b>
-      </div>
-    </div>
-  );
+function noticeFrom(cause: unknown, fallback: string): { kind: "rejected" | "failed"; detail: string } {
+  if (txKind(cause) === "rejected") {
+    return { kind: "rejected", detail: "You rejected the transaction. Nothing was charged, and the name was not registered." };
+  }
+  const message = txError(cause);
+  return { kind: "failed", detail: message && message !== "The transaction failed." ? `${message} ${fallback}` : fallback };
 }
