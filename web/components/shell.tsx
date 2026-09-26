@@ -24,7 +24,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </Link>
           <nav className="nav">
             <Link href="/portfolio">Names</Link>
-            <Link href="/integrate">For apps</Link>
+            <Link href="/docs">Docs</Link>
             <Link href="/about">About</Link>
             <ConnectButton />
           </nav>

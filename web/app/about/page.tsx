@@ -14,7 +14,7 @@ export default function AboutPage() {
         <p className="muted">
           MetaMask does not resolve .usd. ENS does not resolve .usd. Browsers do not resolve .usd. Sending tokens to a
           name inside a wallet that has not integrated this registry will not find the payment address for you. An app
-          that wants to send to a name follows the <Link href="/integrate">integration guide</Link>.
+          that wants to send to a name follows the <Link href="/docs">docs</Link>.
         </p>
         <p className="muted">
           The NFT metadata describes the label. It is not proof of ownership or expiry. After a name expires, or after

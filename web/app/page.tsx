@@ -42,7 +42,7 @@ export default function HomePage() {
           <h2>Where it resolves</h2>
           <p className="muted">
             Only in apps that read this registry. A wallet, a browser, or ENS will not turn <span className="mono">alice.usd</span> into
-            an address on its own. <Link href="/integrate">Add it to an app.</Link> <Link href="/about">Read the plain-language explanation.</Link>
+            an address on its own. <Link href="/docs">Read the docs.</Link> <Link href="/about">Read the plain-language explanation.</Link>
           </p>
         </article>
       </section>
