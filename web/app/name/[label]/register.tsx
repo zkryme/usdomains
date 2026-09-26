@@ -33,8 +33,8 @@ export function RegisterFlow({ raw }: { raw: string }) {
   const label = parsed.ok ? parsed.label : "";
   const chainId = useChainId();
   const { address: payer, isConnected } = useAccount();
-  const deployment = deploymentFor(isConnected ? chainId : 5042002);
-  const live = Boolean(parsed.ok && deployment.deployed && deployment.registrar && deployment.network === "testnet");
+  const deployment = deploymentFor(isConnected ? chainId : 5042);
+  const live = Boolean(parsed.ok && deployment.deployed && deployment.registrar && deployment.network !== "other");
   const registrar = (deployment.registrar ?? ZERO) as Address;
 
   const [years, setYears] = useState(1);
@@ -140,7 +140,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
   const ready = committed > 0 && now >= committed + minWait && now <= committed + maxWait;
   const expiredCommit = committed > 0 && now > committed + maxWait;
   const canRegister = availability === 1 || availability === 5;
-  const writesDisabled = !live || deployment.network !== "testnet" || paused || !canRegister;
+  const writesDisabled = !live || paused || !canRegister;
 
   async function commit() {
     if (!payer || !publicClient || !isAddress(recipient) || !recipientConfirmed) return;
@@ -388,7 +388,7 @@ function Explanation({
     );
   }
   if (!deployed) {
-    return <p className="muted">The label matches the v1 character rules. On-chain availability is unknown until a testnet deploy, and this page will not ask for a payment.</p>;
+    return <p className="muted">The label matches the character rules. The Arc contracts are not on this network yet, so this page will not ask for a payment.</p>;
   }
   if (availability === 3) return <p className="muted">This name is active. It resolves only if the owner has set a payment address.</p>;
   if (availability === 4) {

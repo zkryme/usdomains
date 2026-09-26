@@ -28,24 +28,25 @@ Foundry is expected at `%USERPROFILE%\.foundry\bin` if it is not on `PATH`. `lib
 
 Import this repository in Vercel and set the root directory to `web`. The Next.js app is an npm workspace that depends on `sdk/`, so the install must still see the repository root. Do not put a deployer key in the Vercel project. Contract deployment is separate and stays paused.
 
-## Arc Testnet deploy
+## Arc mainnet deploy
 
-Deployment was not run from this workspace: no `PRIVATE_KEY` and no funded deployer were available.
+The product network is Arc mainnet, chain id `5042`, RPC `https://rpc.mainnet.arc.io`. This workspace had no `PRIVATE_KEY` and no funded deployer, so the contracts have not been broadcast. Registration cannot accept USDC until that deploy exists.
 
-When a testnet key is funded from <https://faucet.circle.com>:
+When a mainnet key is funded:
 
 ```bash
-set USD_CONFIRM_TESTNET=YES
+set USD_CONFIRM_MAINNET=YES
+set USD_OPEN_MINT=YES
 set PRIVATE_KEY=...
 set USD_ADMIN=0x...
 set USD_TREASURY=0x...
 set USD_TREASURY_CONTROLLER=0x...
-forge script script/DeployTestnet.s.sol --rpc-url arc_testnet --broadcast --slow --with-gas-price 25000000000
+forge script script/DeployMainnet.s.sol --rpc-url arc_mainnet --broadcast --slow --with-gas-price 25000000000
 ```
 
-Chain id must be `5042002`. RPC is `https://rpc.testnet.arc.io`. USDC is `0x3600000000000000000000000000000000000000`. Keep `maxFeePerGas` at least 20 gwei or Arc drops the transaction. Use a multisig for `USD_ADMIN` and `USD_TREASURY_CONTROLLER` before any later unpause. The script seeds `script/reserved-names.json`, confirms each batch on-chain, closes the seed operator, and leaves registration paused. Copy the addresses it writes to `deployments/arc-testnet.json` into the app deployment module if they differ.
+Use a multisig for `USD_ADMIN` and `USD_TREASURY_CONTROLLER`. `USD_OPEN_MINT=YES` unpauses registration after the reserved names are confirmed. Gas is native USDC, and `maxFeePerGas` must be at least 20 gwei. Copy the addresses written to `deployments/arc-mainnet.json` into the app if the script is not run from this repository.
 
-Do not run `script/DeployMainnet.s.sol`. Its `run` function always reverts.
+Arc Testnet remains available with `script/DeployTestnet.s.sol`, chain id `5042002`, and `USD_CONFIRM_TESTNET=YES`. That script leaves registration paused.
 
 ## Privileged roles
 

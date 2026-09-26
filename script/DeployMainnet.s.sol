@@ -1,20 +1,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
+import {Script, console2} from "forge-std/Script.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ArcChain} from "../src/ArcChain.sol";
-import {Script} from "forge-std/Script.sol";
+import {IReservedNames, IUSDName, IUSDResolver} from "../src/interfaces/IUSD.sol";
+import {ReservedNames} from "../src/ReservedNames.sol";
+import {USDMetadata} from "../src/USDMetadata.sol";
+import {USDName} from "../src/USDName.sol";
+import {USDRegistrar} from "../src/USDRegistrar.sol";
+import {USDResolver} from "../src/USDResolver.sol";
+import {USDReverse} from "../src/USDReverse.sol";
+import {USDTerms} from "../src/USDTerms.sol";
 
-/// @notice Mainnet configuration is recorded here and deployment is refused.
-/// @dev Arc mainnet, from docs.arc.io on 2026-09-26:
-///      chain id 5042, RPC https://rpc.mainnet.arc.io, explorer https://explorer.arc.io,
-///      USDC ERC-20 0x3600000000000000000000000000000000000000 (6 decimals).
-///      Do not delete the revert in order to accept real funds.
+/// @notice Deploys to Arc mainnet in separate transactions.
+/// @dev Required environment:
+///      USD_CONFIRM_MAINNET=YES
+///      PRIVATE_KEY
+///      USD_ADMIN
+///      USD_TREASURY
+///      USD_TREASURY_CONTROLLER
+///      Use a multisig for the admin and treasury controller.
+///      Registration stays paused unless USD_OPEN_MINT=YES.
+///      Gas is native USDC. maxFeePerGas must be at least 20 gwei.
 contract DeployMainnet is Script {
-    error MainnetDeploymentDisabled();
-
-    function run() external pure {
-        revert MainnetDeploymentDisabled();
-    }
+    error ConfirmationRequired();
+    error WrongChain(uint256 chainId);
 
     function chainId() external pure returns (uint256) {
         return ArcChain.MAINNET_CHAIN_ID;
@@ -22,5 +33,107 @@ contract DeployMainnet is Script {
 
     function usdc() external pure returns (address) {
         return ArcChain.USDC;
+    }
+
+    function run() external {
+        if (keccak256(bytes(vm.envOr("USD_CONFIRM_MAINNET", string("")))) != keccak256(bytes("YES"))) {
+            revert ConfirmationRequired();
+        }
+        if (block.chainid != ArcChain.MAINNET_CHAIN_ID) revert WrongChain(block.chainid);
+
+        uint256 key = vm.envUint("PRIVATE_KEY");
+        address owner = vm.addr(key);
+        uint256 startBlock = block.number;
+        address admin = vm.envAddress("USD_ADMIN");
+        address treasury = vm.envAddress("USD_TREASURY");
+        address controller = vm.envAddress("USD_TREASURY_CONTROLLER");
+        bool openMint = keccak256(bytes(vm.envOr("USD_OPEN_MINT", string("")))) == keccak256(bytes("YES"));
+        string[] memory labels = vm.parseJsonStringArray(vm.readFile("script/reserved-names.json"), ".labels");
+
+        vm.startBroadcast(key);
+
+        USDName nameNft = new USDName(owner);
+        USDResolver resolver = new USDResolver(owner, IUSDName(address(nameNft)));
+        USDReverse reverseRegistrar =
+            new USDReverse(owner, IUSDName(address(nameNft)), IUSDResolver(address(resolver)));
+        ReservedNames reserved = new ReservedNames(owner);
+        USDMetadata metadata = new USDMetadata(owner, IUSDName(address(nameNft)));
+        USDRegistrar registrar = new USDRegistrar(
+            IUSDName(address(nameNft)),
+            IUSDResolver(address(resolver)),
+            IReservedNames(address(reserved)),
+            IERC20(ArcChain.USDC),
+            admin,
+            treasury,
+            controller,
+            USDTerms.DEFAULT_GRACE
+        );
+
+        nameNft.wire(address(registrar), address(resolver), address(reverseRegistrar), address(metadata));
+        resolver.setRegistrar(address(registrar));
+        reverseRegistrar.setRegistrar(address(registrar));
+        reserved.setRegistrar(address(registrar));
+        metadata.setRegistrar(address(registrar));
+
+        uint256 offset;
+        while (offset < labels.length) {
+            uint256 end = offset + USDTerms.MAX_BATCH;
+            if (end > labels.length) end = labels.length;
+            string[] memory batch = new string[](end - offset);
+            for (uint256 i; i < batch.length; ++i) {
+                batch[i] = labels[offset + i];
+            }
+            registrar.seedReservations(batch);
+            registrar.confirmReservations(batch);
+            offset = end;
+        }
+
+        registrar.closeSeed();
+        if (openMint) registrar.setRegistrationPaused(false);
+        vm.stopBroadcast();
+
+        console2.log("name", address(nameNft));
+        console2.log("resolver", address(resolver));
+        console2.log("reverse", address(reverseRegistrar));
+        console2.log("reserved", address(reserved));
+        console2.log("metadata", address(metadata));
+        console2.log("registrar", address(registrar));
+
+        string memory output = string.concat(
+            "{\n",
+            '  "chainId": 5042,\n',
+            '  "deployed": true,\n',
+            '  "registrationPaused": ',
+            openMint ? "false" : "true",
+            ",\n",
+            '  "publicMintOpen": ',
+            openMint ? "true" : "false",
+            ",\n",
+            '  "startBlock": ',
+            vm.toString(startBlock),
+            ',\n',
+            '  "usdc": "',
+            vm.toString(ArcChain.USDC),
+            '",\n',
+            '  "name": "',
+            vm.toString(address(nameNft)),
+            '",\n',
+            '  "resolver": "',
+            vm.toString(address(resolver)),
+            '",\n',
+            '  "reverse": "',
+            vm.toString(address(reverseRegistrar)),
+            '",\n',
+            '  "reserved": "',
+            vm.toString(address(reserved)),
+            '",\n',
+            '  "metadata": "',
+            vm.toString(address(metadata)),
+            '",\n',
+            '  "registrar": "',
+            vm.toString(address(registrar)),
+            '"\n}\n'
+        );
+        vm.writeFile("deployments/arc-mainnet.json", output);
     }
 }

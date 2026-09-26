@@ -82,7 +82,7 @@ contract SeedTest is Test {
 
     function test_mainnetScriptCannotDeploy() public {
         DeployMainnet mainnet = new DeployMainnet();
-        vm.expectRevert(DeployMainnet.MainnetDeploymentDisabled.selector);
+        vm.expectRevert(DeployMainnet.ConfirmationRequired.selector);
         mainnet.run();
         assertEq(mainnet.chainId(), 5042);
         assertEq(mainnet.usdc(), 0x3600000000000000000000000000000000000000);

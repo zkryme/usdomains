@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Instrument_Serif, Outfit } from "next/font/google";
+import { IBM_Plex_Mono, Newsreader, Outfit } from "next/font/google";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Shell } from "@/components/shell";
 
 const sans = Outfit({ subsets: ["latin"], variable: "--font-sans" });
-const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", variable: "--font-serif" });
+const serif = Newsreader({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-serif" });
 const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono" });
 
 export const metadata: Metadata = {

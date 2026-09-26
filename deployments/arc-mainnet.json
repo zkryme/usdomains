@@ -1,0 +1,14 @@
+{
+  "chainId": 5042,
+  "deployed": false,
+  "registrationPaused": true,
+  "publicMintOpen": false,
+  "startBlock": null,
+  "usdc": "0x3600000000000000000000000000000000000000",
+  "name": null,
+  "resolver": null,
+  "reverse": null,
+  "reserved": null,
+  "metadata": null,
+  "registrar": null
+}

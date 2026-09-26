@@ -16,8 +16,8 @@ export function ManageFlow({ raw }: { raw: string }) {
   const tokenId = parsed.ok ? BigInt(keccak256(toBytes(parsed.label))) : 0n;
   const chainId = useChainId();
   const { address, isConnected } = useAccount();
-  const deployment = deploymentFor(isConnected ? chainId : 5042002);
-  const live = Boolean(parsed.ok && deployment.deployed && deployment.registrar && deployment.resolver && deployment.name && deployment.reverse && deployment.network === "testnet");
+  const deployment = deploymentFor(isConnected ? chainId : 5042);
+  const live = Boolean(parsed.ok && deployment.deployed && deployment.registrar && deployment.resolver && deployment.name && deployment.reverse && deployment.network !== "other");
   const registrar = (deployment.registrar ?? ZERO) as Address;
   const resolver = (deployment.resolver ?? ZERO) as Address;
   const reverse = (deployment.reverse ?? ZERO) as Address;

@@ -20,7 +20,7 @@ const transferEvent = parseAbiItem("event Transfer(address indexed from, address
 export function Portfolio() {
   const chainId = useChainId();
   const { address, isConnected } = useAccount();
-  const deployment = deploymentFor(isConnected ? chainId : 5042002);
+  const deployment = deploymentFor(isConnected ? chainId : 5042);
   const client = usePublicClient({ chainId: deployment.chainId });
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [primary, setPrimary] = useState("none");
@@ -103,7 +103,7 @@ export function Portfolio() {
     return (
       <article className="card">
         <h2>Portfolio</h2>
-        <p>Connect an Arc Testnet wallet to see names it currently holds.</p>
+        <p>Connect an Arc wallet to see names it currently holds.</p>
       </article>
     );
   }
@@ -115,8 +115,8 @@ export function Portfolio() {
         Connected wallet <code className="full mono">{address}</code>
       </p>
       <p className="muted">Verified primary name: {primary}. This is empty unless the name still forward-resolves to this wallet.</p>
-      {!deployment.deployed || deployment.network === "mainnet" ? (
-        <p>No .usd contracts are deployed for this network, so there is nothing to list and nothing to pay.</p>
+      {!deployment.deployed ? (
+        <p>No .usd contracts are on this network yet, so there is nothing to list and nothing to pay.</p>
       ) : null}
       {loading ? <p>Reading registrations…</p> : null}
       {error ? <p className="error">{error}</p> : null}
