@@ -28,6 +28,12 @@ function draftKey(chainId: number, label: string, payer: string) {
   return `usd-commit:${chainId}:${label}:${payer.toLowerCase()}`;
 }
 
+function listedAnnual(label: string): string {
+  if (label.length <= 3) return "30";
+  if (label.length === 4) return "20";
+  return "10";
+}
+
 export function RegisterFlow({ raw }: { raw: string }) {
   const parsed = useMemo(() => parseUsdName(raw.includes(".") ? raw : `${raw}.usd`), [raw]);
   const label = parsed.ok ? parsed.label : "";
@@ -322,7 +328,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
       <aside className="card stack">
         <h3>Price and grace</h3>
         <p className="muted">
-          Current annual price for this length: {prices.data ? `${formatUsdc(prices.data[0])} USDC` : "88, 18, or 8 USDC before deploy"}.
+          Current annual price for this length: {prices.data ? `${formatUsdc(prices.data[0])} USDC` : `${listedAnnual(label)} USDC`}.
           {prices.data && prices.data[2] > 0n
             ? ` A change to ${formatUsdc(prices.data[1])} USDC is scheduled for ${formatWhen(prices.data[2])}.`
             : " No price change is scheduled."}
@@ -416,15 +422,15 @@ function PriceTable() {
     <div className="prices">
       <div className="price">
         <span className="muted">3 characters</span>
-        <b>88 USDC</b>
+        <b>30 USDC</b>
       </div>
       <div className="price">
         <span className="muted">4 characters</span>
-        <b>18 USDC</b>
+        <b>20 USDC</b>
       </div>
       <div className="price">
         <span className="muted">5 to 32</span>
-        <b>8 USDC</b>
+        <b>10 USDC</b>
       </div>
     </div>
   );

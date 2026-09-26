@@ -21,13 +21,13 @@ contract USDRegistrarTest is USDTestBase {
     }
 
     function test_pricesUseSixDecimalUnits() public view {
-        assertEq(registrar.annualPrice(3), 88 * USDTerms.USDC_UNIT);
-        assertEq(registrar.annualPrice(4), 18 * USDTerms.USDC_UNIT);
-        assertEq(registrar.annualPrice(5), 8 * USDTerms.USDC_UNIT);
-        assertEq(registrar.annualPrice(32), 8 * USDTerms.USDC_UNIT);
-        assertEq(registrar.quote("abc", 1), 88_000_000);
-        assertEq(registrar.quote("abcd", 2), 36_000_000);
-        assertEq(registrar.quote("abcde", 10), 80_000_000);
+        assertEq(registrar.annualPrice(3), 30 * USDTerms.USDC_UNIT);
+        assertEq(registrar.annualPrice(4), 20 * USDTerms.USDC_UNIT);
+        assertEq(registrar.annualPrice(5), 10 * USDTerms.USDC_UNIT);
+        assertEq(registrar.annualPrice(32), 10 * USDTerms.USDC_UNIT);
+        assertEq(registrar.quote("abc", 1), 30_000_000);
+        assertEq(registrar.quote("abcd", 2), 40_000_000);
+        assertEq(registrar.quote("abcde", 10), 100_000_000);
         assertTrue(registrar.quote("abc", 1) != 100 ether);
     }
 
@@ -73,7 +73,7 @@ contract USDRegistrarTest is USDTestBase {
         _unpause();
         string memory emoji = unicode"abc😀";
 
-        assertEq(registrar.quote("ab-c", 1), 18 * USDTerms.USDC_UNIT);
+        assertEq(registrar.quote("ab-c", 1), 20 * USDTerms.USDC_UNIT);
 
         vm.expectRevert(LabelValidator.InvalidHyphen.selector);
         registrar.quote("-abc", 1);
@@ -109,7 +109,7 @@ contract USDRegistrarTest is USDTestBase {
         length = uint8(bound(length, 3, 32));
         years_ = uint8(bound(years_, 1, 10));
         string memory label = _letters(length);
-        uint256 perYear = length == 3 ? 88 : length == 4 ? 18 : 8;
+        uint256 perYear = length == 3 ? 30 : length == 4 ? 20 : 10;
         assertEq(registrar.quote(label, years_), perYear * USDTerms.USDC_UNIT * years_);
     }
 
@@ -262,7 +262,7 @@ contract USDRegistrarTest is USDTestBase {
 
         uint64 eta = uint64(block.timestamp + USDTerms.MIN_PRICE_DELAY);
         registrar.schedulePrice(5, 9 * USDTerms.USDC_UNIT, eta);
-        assertEq(registrar.quote("alice", 1), 8 * USDTerms.USDC_UNIT);
+        assertEq(registrar.quote("alice", 1), 10 * USDTerms.USDC_UNIT);
 
         vm.warp(eta);
         assertEq(registrar.quote("alice", 1), 9 * USDTerms.USDC_UNIT);
@@ -626,7 +626,7 @@ contract USDRegistrarTest is USDTestBase {
         assertTrue(token.sawReenter());
         assertFalse(token.reenterSucceeded());
         assertEq(nameNft.ownerOf(nameNftToken("alice")), alice);
-        assertEq(registrar.accountedBalance(), 8 * USDTerms.USDC_UNIT);
+        assertEq(registrar.accountedBalance(), 10 * USDTerms.USDC_UNIT);
         assertEq(token.balanceOf(address(registrar)), registrar.accountedBalance());
 
         token.arm(address(registrar), abi.encodeWithSelector(USDRegistrar.withdraw.selector, registrar.accountedBalance()));
@@ -634,7 +634,7 @@ contract USDRegistrarTest is USDTestBase {
         assertTrue(token.sawReenter());
         assertFalse(token.reenterSucceeded());
         assertEq(registrar.accountedBalance(), 0);
-        assertEq(token.balanceOf(treasury), 8 * USDTerms.USDC_UNIT);
+        assertEq(token.balanceOf(treasury), 10 * USDTerms.USDC_UNIT);
     }
 
     function test_shortPaymentIsRejected() public {
@@ -652,7 +652,7 @@ contract USDRegistrarTest is USDTestBase {
         registrar.commit(commitment);
         vm.warp(block.timestamp + 61);
         vm.prank(alice);
-        vm.expectRevert(abi.encodeWithSelector(USDRegistrar.PaymentMismatch.selector, 8 * USDTerms.USDC_UNIT, 8 * USDTerms.USDC_UNIT - 1));
+        vm.expectRevert(abi.encodeWithSelector(USDRegistrar.PaymentMismatch.selector, 10 * USDTerms.USDC_UNIT, 10 * USDTerms.USDC_UNIT - 1));
         registrar.reveal("alice", alice, 1, secret);
     }
 

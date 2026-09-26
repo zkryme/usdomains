@@ -8,21 +8,24 @@
  * Prices and transfers in this service use the USDC ERC-20 interface
  * (6 decimals) at 0x3600000000000000000000000000000000000000.
  * Native gas uses 18 decimals. Do not pass a native `value` as the payment.
+ *
+ * Replace `contracts` with deployments/arc-mainnet.json after that file
+ * says deployed: true. Until then this function refuses to return a destination.
  */
 import { createPublicClient, http, parseUnits, type Address } from "viem";
-import { resolveUsdName, undeployedTestnet, type UsdContracts } from "../src/index";
+import { resolveUsdName, undeployedMainnet, type UsdContracts } from "../src/index";
 
-const contracts: UsdContracts = undeployedTestnet;
+const contracts: UsdContracts = undeployedMainnet;
 
 async function payName(input: string, amountUsdc: string) {
   const client = createPublicClient({
     chain: {
-      id: 5042002,
-      name: "Arc Testnet",
+      id: 5042,
+      name: "Arc",
       nativeCurrency: { name: "USDC", symbol: "USDC", decimals: 18 },
-      rpcUrls: { default: { http: ["https://rpc.testnet.arc.io"] } },
+      rpcUrls: { default: { http: ["https://rpc.mainnet.arc.io"] } },
     },
-    transport: http("https://rpc.testnet.arc.io"),
+    transport: http("https://rpc.mainnet.arc.io"),
   });
 
   const resolved = await resolveUsdName(client, contracts, input);

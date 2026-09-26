@@ -16,7 +16,7 @@ export const USDC_ERC20_DECIMALS = 6;
 export const USDC_NATIVE_DECIMALS = 18;
 export const ARC_USDC: Address = "0x3600000000000000000000000000000000000000";
 
-/** Checked against docs.arc.io on 2026-09-26. Mainnet deployment of this service is disabled. */
+/** Checked against docs.arc.io on 2026-09-26. Contract addresses stay empty until a mainnet deploy writes them. */
 export const arcNetworks = {
   testnet: {
     chainId: 5042002,

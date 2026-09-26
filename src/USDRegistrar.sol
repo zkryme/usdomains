@@ -191,9 +191,9 @@ contract USDRegistrar is AccessControl, ReentrancyGuard, RejectNativeValue {
         seedOperator = msg.sender;
         _grace.current = gracePeriod_;
 
-        _prices[3].current = 88 * USDC_UNIT;
-        _prices[4].current = 18 * USDC_UNIT;
-        _prices[5].current = 8 * USDC_UNIT;
+        _prices[3].current = 30 * USDC_UNIT;
+        _prices[4].current = 20 * USDC_UNIT;
+        _prices[5].current = 10 * USDC_UNIT;
 
         _grantRole(DEFAULT_ADMIN_ROLE, admin_);
         _grantRole(ADMIN_ROLE, admin_);
@@ -201,9 +201,9 @@ contract USDRegistrar is AccessControl, ReentrancyGuard, RejectNativeValue {
 
         emit RegistrationPauseSet(true);
         emit GraceChangeApplied(gracePeriod_);
-        emit PriceChangeApplied(3, 88 * USDC_UNIT);
-        emit PriceChangeApplied(4, 18 * USDC_UNIT);
-        emit PriceChangeApplied(5, 8 * USDC_UNIT);
+        emit PriceChangeApplied(3, 30 * USDC_UNIT);
+        emit PriceChangeApplied(4, 20 * USDC_UNIT);
+        emit PriceChangeApplied(5, 10 * USDC_UNIT);
     }
 
     // ---------------------------------------------------------------------

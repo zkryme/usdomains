@@ -13,13 +13,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="sky">
-      <svg className="arcs" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <path d="M-40 760C220 620 380 180 760 120" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="1.4" />
-        <path d="M980 -40C860 220 1120 420 1500 520" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.4" />
-        <path d="M-80 80C180 40 260 280 140 460" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="1.2" />
-        <circle cx="760" cy="120" r="3" fill="white" />
-        <circle cx="1120" cy="300" r="3" fill="white" />
-      </svg>
       <div className="shell">
         <header className="top">
           <Link href="/" className="brand">
@@ -30,8 +23,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
           <nav className="nav">
-            <Link href="/portfolio">Portfolio</Link>
-            <Link href="/about">Where names work</Link>
+            <Link href="/portfolio">Names</Link>
+            <Link href="/integrate">For apps</Link>
+            <Link href="/about">About</Link>
             <ConnectButton />
           </nav>
         </header>

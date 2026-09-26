@@ -8,9 +8,9 @@ The contracts are immutable. Registration is paused. This repository does not de
 
 `USDName` is the NFT. The token id is the hash of the canonical label. `USDRegistrar` sells, renews, and expires names and pulls exact USDC. `USDResolver` stores the payment address and short text records. `USDReverse` stores a primary name and returns it only when it still forward-resolves to that wallet. `ReservedNames` blocks labels that must not be minted.
 
-Public labels are lowercase `a-z`, digits, and single hyphens between characters, 3 to 32 characters. Emoji and every other character revert in the contract. A term is 1 to 10 years of 365 days. Prices are 88 USDC per year for 3 characters, 18 for 4, and 8 for 5 to 32. Prices are 6-decimal ERC-20 base units. Native `msg.value` is 18 decimals and is rejected.
+Public labels are lowercase `a-z`, digits, and single hyphens between characters, 3 to 32 characters. Emoji and every other character revert in the contract. A term is 1 to 10 years of 365 days. Prices are 30 USDC per year for 3 characters, 20 for 4, and 10 for 5 to 32. Prices are 6-decimal ERC-20 base units. Native `msg.value` is 18 decimals and is rejected.
 
-Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) before relying on a name. It covers expiry, grace, administrator powers, and normalization. Version 1 has no dispute process: [docs/DISPUTES.md](docs/DISPUTES.md).
+Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) before relying on a name. It covers expiry, grace, administrator powers, and normalization. Version 1 has no dispute process: [docs/DISPUTES.md](docs/DISPUTES.md). Apps that send funds to a name follow [docs/INTEGRATION.md](docs/INTEGRATION.md).
 
 ## Develop
 

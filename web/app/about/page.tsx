@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function AboutPage() {
   return (
     <main className="grid">
@@ -11,7 +13,8 @@ export default function AboutPage() {
         </p>
         <p className="muted">
           MetaMask does not resolve .usd. ENS does not resolve .usd. Browsers do not resolve .usd. Sending tokens to a
-          name inside a wallet that has not integrated this registry will not find the payment address for you.
+          name inside a wallet that has not integrated this registry will not find the payment address for you. An app
+          that wants to send to a name follows the <Link href="/integrate">integration guide</Link>.
         </p>
         <p className="muted">
           The NFT metadata describes the label. It is not proof of ownership or expiry. After a name expires, or after
@@ -23,7 +26,7 @@ export default function AboutPage() {
         <ul className="list">
           <li>Lowercase letters, digits, and single hyphens between characters. 3 to 32 characters. No emoji or other symbols.</li>
           <li>One to ten years. Grace starts at 30 days and can be scheduled between 7 and 90.</li>
-          <li>Payment is exact USDC on the ERC-20 interface, 6 decimals. Native value is rejected.</li>
+          <li>30 USDC per year for 3 characters, 20 for 4, and 10 for 5 to 32. Payment is exact USDC, 6 decimals. Native value is rejected.</li>
           <li>No administrator can take a name that is still active or in grace.</li>
           <li>The reserved list cannot catch every lookalike.</li>
         </ul>
