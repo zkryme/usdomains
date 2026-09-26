@@ -12,41 +12,35 @@ export default function HomePage() {
           3 characters: 30 USDC/year · 4 characters: 20 USDC/year · 5–32 characters: 10 USDC/year
         </p>
       </section>
-      <section className="how" aria-label="How it works">
-        <article>
-          <span>1</span>
-          <h2>Search a name</h2>
-          <p>Check the label, the yearly price, and whether it can be registered.</p>
-        </article>
-        <article>
-          <span>2</span>
-          <h2>Register for 1–10 years</h2>
-          <p>Commit the name, wait at least 60 seconds, then pay the exact USDC quote.</p>
-        </article>
-        <article>
-          <span>3</span>
-          <h2>Set its Arc payment address</h2>
-          <p>The NFT controls the name. No app reads this registry yet, so the name does not resolve anywhere else.</p>
-        </article>
-      </section>
-      <section className="grid">
-        <article className="card">
-          <h2>What you are buying</h2>
-          <ul className="list">
-            <li>A lowercase label, an ERC-721, and a term of one to ten years.</li>
-            <li>The right to set the Arc payment address, renew, transfer, or choose a primary name.</li>
-            <li>After the term and the grace period, someone else can register the same label.</li>
-          </ul>
-          <p className="muted">One- and two-character names are not for sale. A scheduled price change is shown before you commit.</p>
-        </article>
-        <article className="card">
-          <h2>Where it resolves</h2>
-          <p className="muted">
-            No app resolves a <span className="mono">.usd</span> name yet. Wallets, browsers, and ENS leave{" "}
-            <span className="mono">alice.usd</span> as text. An app has to read this registry before it can find an
-            address. <Link href="/docs">Docs for that app.</Link>
+      <section className="own">
+        <div>
+          <h2>A name you can own and manage</h2>
+          <p>
+            Register a .usd name on Arc for 1–10 years. Your name is an NFT that lets you set an Arc payment address,
+            renew, or transfer it. Apps must integrate the US Domains registry to resolve .usd names. None do yet, and a
+            wallet, browser, or ENS will not resolve one on its own.
           </p>
-        </article>
+          <Link href="/docs#register">Read the docs</Link>
+        </div>
+        <figure className="nft-sample">
+          <figcaption className="nft-tag">Example NFT</figcaption>
+          <div className="nft-art">
+            <strong>alice.usd</strong>
+            <span>US Domains</span>
+          </div>
+          <dl>
+            <dt>Arc payment address</dt>
+            <dd className="mono">0xA11CE000…0000A11C</dd>
+          </dl>
+        </figure>
+      </section>
+      <section className="welcome">
+        <h2>Built for what&apos;s next on Arc</h2>
+        <p>
+          Your .usd name gives you a recognizable identity and an Arc payment address you control. We&apos;re building
+          tools and integrations so more apps can use .usd names over time.
+        </p>
+        <Link href="/docs">Explore the docs →</Link>
       </section>
     </main>
   );

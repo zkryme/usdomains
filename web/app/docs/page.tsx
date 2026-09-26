@@ -43,6 +43,9 @@ export default function DocsPage() {
       <nav className="docs-nav" aria-label="Docs">
         <p>Reference</p>
         <a href="#overview">Overview</a>
+        <a href="#register">Registration</a>
+        <a href="#expiry">Expiry</a>
+        <a href="#nft">The NFT</a>
         <a href="#network">Network</a>
         <a href="#resolve">Resolve</a>
         <a href="#status">Status values</a>
@@ -67,7 +70,42 @@ export default function DocsPage() {
         <p>
           The helpers are in <code>sdk/</code> in this repository. The package is not on npm. Copy that folder, or call
           the same contract reads with viem or ethers. <code>alice</code> and <code>alice.usd</code> are the same input
-          to the helper. The helper lowercases. The contract does not.
+          to the helper. The helper lowercases. The contract does not. This website, usdomains.xyz, is not a .usd name.
+        </p>
+        <p>
+          No wallet, browser, or ENS integration resolves .usd. An app has to read this registry. If the status is
+          anything other than <code>resolved</code>, there is no address to guess.
+        </p>
+
+        <h2 id="register">Registration</h2>
+        <p>A public name is 3 to 32 characters: lowercase letters, digits, and single hyphens between characters.</p>
+        <ol className="list">
+          <li>Search the label and check the yearly price.</li>
+          <li>Commit the name. The commitment must be at least 60 seconds old and expires after 24 hours.</li>
+          <li>Approve the exact 6-decimal USDC amount, then reveal. The name is registered only after Arc confirms that payment.</li>
+          <li>Set the Arc payment address on the NFT.</li>
+        </ol>
+        <p>
+          A term is 1 to 10 years of 365 days. One- and two-character names are not for sale. If a price change is
+          scheduled, it is shown before you commit, and reveal charges the price in effect at that moment. Native{" "}
+          <code>msg.value</code> is rejected. The commitment binds the label, recipient, years, resolver, payer, secret,
+          chain id, and registrar. The payer who reveals must be the payer in the commitment. The reserved list blocks exact labels. It
+          does not catch every lookalike.
+        </p>
+
+        <h2 id="expiry">Expiry</h2>
+        <p>
+          Grace starts at 30 days and can be scheduled between 7 and 90 days. During grace the name does not resolve.
+          The current registrant can still renew. After grace, someone else can register the same label, and the old NFT
+          is burned.
+        </p>
+
+        <h2 id="nft">The NFT</h2>
+        <p>
+          The ERC-721 lets the holder set the Arc payment address, renew, transfer, or choose a primary name. The image
+          describes the label and phase. It is not proof of ownership or expiry. After a name expires, or after someone
+          else registers it, a wallet may still show the old image. Read the registrar before you send. No
+          administrator can take a name that is still active or in grace.
         </p>
 
         <h2 id="network">Network</h2>
@@ -207,9 +245,8 @@ export default function DocsPage() {
           </tbody>
         </table>
         <p>
-          Registration is a commit, a wait of at least 60 seconds, an ERC-20 approval for the exact quote, then{" "}
-          <code>reveal</code>. The commitment binds the label, recipient, years, resolver, payer, secret, chain id, and
-          registrar. The payer who reveals must be the payer in the commitment.{" "}
+          Registration details, the 60-second commit, grace, and what the NFT controls are in the{" "}
+          <a href="#register">registration</a>, <a href="#expiry">expiry</a>, and <a href="#nft">NFT</a> sections.{" "}
           <code>sdk/examples/integrate.ts</code> refuses every status other than <code>resolved</code>.
         </p>
       </article>

@@ -132,32 +132,68 @@ code, .mono { font-family: var(--font-mono), ui-monospace, monospace; }
 .preview-actions .primary, .preview-actions .quiet { display: inline-flex; align-items: center; justify-content: center; }
 .fine { color: var(--muted); font-size: 13px; line-height: 1.45; margin: 0; }
 .price-strip { margin: 18px auto 0; max-width: 640px; color: var(--muted); font-size: 14px; line-height: 1.5; }
-.how {
+.own {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-top: 22px;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 48px;
+  align-items: center;
+  margin-top: 56px;
   text-align: left;
 }
-.how article {
+.own h2,
+.welcome h1,
+.welcome h2 {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+.own p,
+.welcome p { margin: 0 0 18px; max-width: 460px; line-height: 1.6; color: #3a342c; }
+.own a,
+.welcome a { color: var(--blue-deep); font-weight: 650; }
+.welcome { text-align: left; }
+.own + .welcome { margin-top: 72px; }
+.nft-sample {
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 16px;
+  border-radius: 20px;
+  padding: 14px;
 }
-.how span {
-  display: inline-grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  background: #e8f0ff;
-  color: var(--blue-deep);
-  font-size: 13px;
+.nft-tag {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
-.how h2 { margin: 10px 0 6px; font-size: 16px; letter-spacing: -0.03em; }
-.how p { margin: 0; color: var(--muted); line-height: 1.45; font-size: 14px; }
+.nft-art {
+  border-radius: 14px;
+  min-height: 220px;
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: #f7f1e8;
+  background-image: radial-gradient(rgba(28, 25, 22, 0.06) 0.7px, transparent 0.7px);
+  background-size: 7px 7px;
+  border: 1px solid #e7dfd4;
+}
+.nft-art strong {
+  display: block;
+  font-size: 32px;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+.nft-art span { margin-top: 8px; color: var(--blue-deep); font-size: 13px; font-weight: 650; }
+.nft-sample dl { margin: 12px 2px 0; }
+.nft-sample dt { color: var(--muted); font-size: 12px; }
+.nft-sample dd { margin: 4px 0 0; font-size: 13px; letter-spacing: -0.02em; }
 .summary {
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -338,7 +374,7 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line
   .searchbar { padding: 4px 14px; }
   .preview-actions { flex-direction: column; }
   .preview-actions .primary, .preview-actions .quiet { width: 100%; }
-  .how { grid-template-columns: 1fr; }
+  .own { grid-template-columns: 1fr; gap: 28px; }
   .summary dl { grid-template-columns: 1fr; gap: 2px 0; }
   .summary div, .summary dd { margin-bottom: 8px; }
   .top { align-items: flex-start; }

@@ -244,6 +244,9 @@ export function RegisterFlow({ raw }: { raw: string }) {
           <h2 style={{ margin: 0 }}>{parsed.name}</h2>
           <Status availability={availability} reserved={reserved} paused={paused} deployed={deployment.deployed} />
         </div>
+        <p className="muted">
+          {parsed.label.length} characters. Letters a–z, digits, and single hyphens between characters.
+        </p>
         <Explanation
           availability={availability}
           reserved={reserved}
@@ -280,6 +283,9 @@ export function RegisterFlow({ raw }: { raw: string }) {
             ))}
           </select>
         </label>
+        <p className="muted">
+          {formatUsdc(perYear)} USDC per year. {years} year{years === 1 ? "" : "s"} costs {formatUsdc(total)} USDC.
+        </p>
         <div className="summary">
           <h3>Before you confirm</h3>
           <dl>

@@ -1,6 +1,6 @@
 # Use a .usd name from an app
 
-No app resolves a `.usd` name yet. A wallet, a browser, and ENS leave `alice.usd` as text. The app that sends the payment has to read this registry and stop unless the result is a live address.
+No app resolves a `.usd` name yet. A wallet, a browser, and ENS leave `alice.usd` as text. The website usdomains.xyz is not a `.usd` name. The app that sends the payment has to read this registry and stop unless the result is a live address. The reserved list blocks exact labels and does not catch every lookalike. After expiry or a new registration, a wallet may still show an old NFT image.
 
 The helpers live in `sdk/`. The package is not published to npm. Copy `sdk/src` or depend on this repository. The same rules apply if you call the contracts with viem or ethers and skip the helper.
 
@@ -84,6 +84,8 @@ Do not call `USDResolver.addr(tokenId)` for a payment. That returns a stored rec
 
 ## Quote a registration
 
-`getPrice(client, contracts, "alice.usd", years)` returns a 6-decimal USDC amount. Years are 1 to 10. The annual price is 30 USDC for 3 characters, 20 for 4, and 10 for 5 to 32. Registration is a commit, a wait of at least 60 seconds, an ERC-20 approval for the exact quote, then `reveal`. The commitment binds the label, recipient, years, resolver, payer, secret, chain id, and registrar. The payer who reveals must be the payer in the commitment.
+`getPrice(client, contracts, "alice.usd", years)` returns a 6-decimal USDC amount. Years are 1 to 10. The annual price is 30 USDC for 3 characters, 20 for 4, and 10 for 5 to 32. One- and two-character names are not for sale. A scheduled price is shown before commit, and reveal charges the price in effect then. Registration is a commit, a wait of at least 60 seconds, an ERC-20 approval for the exact quote, then `reveal`. The commitment expires after 24 hours. It binds the label, recipient, years, resolver, payer, secret, chain id, and registrar. The payer who reveals must be the payer in the commitment.
+
+Grace starts at 30 days. The name does not resolve during grace. After grace, someone else can register the label and the old NFT is burned. The NFT lets the holder set the payment address, renew, transfer, or choose a primary name. Its image is not proof of ownership.
 
 `sdk/examples/integrate.ts` is the send path. It refuses every status other than `resolved`.
