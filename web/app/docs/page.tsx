@@ -54,7 +54,8 @@ export default function DocsPage() {
         <p className="docs-kicker">Docs</p>
         <h1>Integrate .usd</h1>
         <p className="lede">
-          An app resolves a name by reading this registry. A wallet, a browser, and ENS will not do that lookup.
+          No app resolves a .usd name yet. A wallet, a browser, and ENS leave the name as text. This page is how an app
+          reads the registry and finds an address.
         </p>
 
         <h2 id="overview">Overview</h2>

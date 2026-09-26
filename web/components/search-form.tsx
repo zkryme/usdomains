@@ -130,7 +130,7 @@ export function SearchForm() {
                 ) : null}
               </div>
               <p className="fine">
-                {parsed.name} resolves only in apps that read this registry. Wallets, browsers, and ENS do not turn it into an address.
+                No app resolves {parsed.name} yet. Wallets, browsers, and ENS leave it as text.
               </p>
             </>
           )}

@@ -1,6 +1,6 @@
 # Use a .usd name from an app
 
-A wallet, a browser, and ENS will not turn `alice.usd` into an address. The app that sends the payment has to read this registry and stop unless the result is a live address.
+No app resolves a `.usd` name yet. A wallet, a browser, and ENS leave `alice.usd` as text. The app that sends the payment has to read this registry and stop unless the result is a live address.
 
 The helpers live in `sdk/`. The package is not published to npm. Copy `sdk/src` or depend on this repository. The same rules apply if you call the contracts with viem or ethers and skip the helper.
 

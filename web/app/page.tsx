@@ -26,7 +26,7 @@ export default function HomePage() {
         <article>
           <span>3</span>
           <h2>Set its Arc payment address</h2>
-          <p>The NFT controls the name. Apps that read this registry can then resolve it.</p>
+          <p>The NFT controls the name. No app reads this registry yet, so the name does not resolve anywhere else.</p>
         </article>
       </section>
       <section className="grid">
@@ -42,8 +42,9 @@ export default function HomePage() {
         <article className="card">
           <h2>Where it resolves</h2>
           <p className="muted">
-            Only in apps that read this registry. A wallet, a browser, or ENS will not turn <span className="mono">alice.usd</span> into
-            an address on its own. <Link href="/docs">Read the docs.</Link> <Link href="/about">Read the plain-language explanation.</Link>
+            No app resolves a <span className="mono">.usd</span> name yet. Wallets, browsers, and ENS leave{" "}
+            <span className="mono">alice.usd</span> as text. An app has to read this registry before it can find an
+            address. <Link href="/docs">Docs for that app.</Link>
           </p>
         </article>
       </section>
