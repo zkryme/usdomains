@@ -25,7 +25,7 @@ button, input, select { font: inherit; color: inherit; }
 code, .mono { font-family: var(--font-mono), ui-monospace, monospace; }
 
 .sky { min-height: 100vh; }
-.shell { max-width: 1080px; margin: 0 auto; padding: 0 24px 80px; }
+.shell { max-width: 1080px; margin: 0 auto; padding: 0 24px 48px; }
 
 .top {
   position: sticky;
@@ -140,26 +140,21 @@ code, .mono { font-family: var(--font-mono), ui-monospace, monospace; }
 .price-strip { margin: 18px auto 0; max-width: 640px; color: var(--muted); font-size: 14px; line-height: 1.5; }
 .own {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 48px;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 40px;
   align-items: center;
-  margin-top: 56px;
+  width: 100%;
+  margin-top: 44px;
   text-align: left;
 }
-.own h2,
-.welcome h1,
-.welcome h2 {
+.own h2 {
   margin: 0 0 12px;
   font-size: clamp(28px, 4vw, 40px);
   letter-spacing: -0.04em;
   line-height: 1.05;
 }
-.own p,
-.welcome p { margin: 0 0 18px; max-width: 460px; line-height: 1.6; color: #3a342c; }
-.own a,
-.welcome a { color: var(--blue-deep); font-weight: 650; }
-.welcome { text-align: left; }
-.own + .welcome { margin-top: 72px; }
+.own p { margin: 0 0 16px; max-width: 34em; line-height: 1.55; color: #3a342c; }
+.own a { color: var(--blue-deep); font-weight: 650; }
 .nft-sample {
   margin: 0;
   width: 100%;
@@ -167,12 +162,21 @@ code, .mono { font-family: var(--font-mono), ui-monospace, monospace; }
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 20px;
-  padding: 14px;
+  padding: 14px 14px 12px;
+}
+.nft-tag {
+  display: block;
+  margin: 0 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 .nft-art {
   border-radius: 14px;
-  min-height: 220px;
-  padding: 28px 22px;
+  min-height: 268px;
+  padding: 32px 24px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -183,14 +187,15 @@ code, .mono { font-family: var(--font-mono), ui-monospace, monospace; }
 }
 .nft-art strong {
   display: block;
-  font-size: 32px;
+  font-size: 36px;
   letter-spacing: -0.045em;
   line-height: 1;
 }
 .nft-art span { margin-top: 8px; color: var(--blue-deep); font-size: 13px; font-weight: 650; }
-.nft-sample dl { margin: 12px 2px 0; }
+.nft-sample dl { margin: 12px 4px 0; }
 .nft-sample dt { color: var(--muted); font-size: 12px; }
 .nft-sample dd { margin: 4px 0 0; font-size: 13px; letter-spacing: -0.02em; }
+.nft-sample .nft-note { margin: 8px 4px 0; max-width: none; color: var(--muted); font-size: 12px; line-height: 1.4; }
 .summary {
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -404,7 +409,8 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line
   .searchbar { padding: 4px 14px; }
   .preview-actions { flex-direction: column; }
   .preview-actions .primary, .preview-actions .quiet { width: 100%; }
-  .own { grid-template-columns: 1fr; gap: 28px; }
+  .own { grid-template-columns: 1fr; gap: 24px; }
+  .nft-sample { width: min(100%, 320px); }
   .checkout-grid, .about-places { grid-template-columns: 1fr; }
   .order { position: static; }
   .summary dl { grid-template-columns: 1fr; gap: 2px 0; }

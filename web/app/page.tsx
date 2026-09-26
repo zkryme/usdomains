@@ -14,13 +14,15 @@ export default function HomePage() {
       </section>
       <section className="own">
         <div>
-          <h2>A name you can own and manage</h2>
+          <h2>Your name on Arc</h2>
           <p>
-            Register a .usd name on Arc for 1–10 years. Your name is an NFT that lets you set an Arc payment address,
-            renew, or transfer it. Apps must integrate the US Domains registry to resolve .usd names.
+            Register a .usd name, manage it as an NFT, and choose the Arc payment address it points to. We&apos;re
+            building integrations to bring .usd names into more apps.
           </p>
+          <Link href="/docs">How .usd works →</Link>
         </div>
         <figure className="nft-sample">
+          <figcaption className="nft-tag">Example name NFT</figcaption>
           <div className="nft-art">
             <strong>jeremy.usd</strong>
             <span>US Domains</span>
@@ -29,15 +31,8 @@ export default function HomePage() {
             <dt>Arc payment address</dt>
             <dd className="mono">0xA11CE000…0000A11C</dd>
           </dl>
+          <p className="nft-note">Illustration only.</p>
         </figure>
-      </section>
-      <section className="welcome">
-        <h2>Built for what&apos;s next on Arc</h2>
-        <p>
-          Your .usd name gives you a recognizable identity and an Arc payment address you control. We&apos;re building
-          tools and integrations so more apps can use .usd names over time.
-        </p>
-        <Link href="/docs">Explore the docs →</Link>
       </section>
     </main>
   );
