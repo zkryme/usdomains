@@ -1,0 +1,12 @@
+node_modules/
+out/
+cache/
+broadcast/
+.env
+.env.local
+web/.next/
+web/node_modules/
+sdk/dist/
+sdk/node_modules/
+/lib/
+.DS_Store

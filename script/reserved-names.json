@@ -1,0 +1,1018 @@
+{
+  "disclosure": "This list cannot catch every spelling, concatenation, translation, or future trademark. v1 accepts only lowercase ASCII labels. Administrators of unregistered labels can add or release reservations later. No administrator can seize a name that is still active or in its grace period.",
+  "count": 202,
+  "labels": [
+    "circle",
+    "circlepay",
+    "usdc",
+    "eurc",
+    "arc",
+    "arcnetwork",
+    "coinbase",
+    "opensea",
+    "binance",
+    "kraken",
+    "paypal",
+    "stripe",
+    "metamask",
+    "ethereum",
+    "ens",
+    "admin",
+    "administrator",
+    "support",
+    "help",
+    "security",
+    "official",
+    "verified",
+    "team",
+    "treasury",
+    "faucet",
+    "bridge",
+    "explorer",
+    "wallet",
+    "registry",
+    "registrar",
+    "resolver",
+    "circleadmin",
+    "circle-admin",
+    "circlesupport",
+    "circle-support",
+    "circleofficial",
+    "circle-official",
+    "circlepayadmin",
+    "circlepay-admin",
+    "circlepaysupport",
+    "circlepay-support",
+    "circlepayofficial",
+    "circlepay-official",
+    "usdcadmin",
+    "usdc-admin",
+    "usdcsupport",
+    "usdc-support",
+    "usdcofficial",
+    "usdc-official",
+    "eurcadmin",
+    "eurc-admin",
+    "eurcsupport",
+    "eurc-support",
+    "eurcofficial",
+    "eurc-official",
+    "arcadmin",
+    "arc-admin",
+    "arcsupport",
+    "arc-support",
+    "arcofficial",
+    "arc-official",
+    "coinbaseadmin",
+    "coinbase-admin",
+    "coinbasesupport",
+    "coinbase-support",
+    "coinbaseofficial",
+    "coinbase-official",
+    "openseaadmin",
+    "opensea-admin",
+    "openseasupport",
+    "opensea-support",
+    "openseaofficial",
+    "opensea-official",
+    "binanceadmin",
+    "binance-admin",
+    "binancesupport",
+    "binance-support",
+    "binanceofficial",
+    "binance-official",
+    "krakenadmin",
+    "kraken-admin",
+    "krakensupport",
+    "kraken-support",
+    "krakenofficial",
+    "kraken-official",
+    "paypaladmin",
+    "paypal-admin",
+    "paypalsupport",
+    "paypal-support",
+    "paypalofficial",
+    "paypal-official",
+    "stripeadmin",
+    "stripe-admin",
+    "stripesupport",
+    "stripe-support",
+    "stripeofficial",
+    "stripe-official",
+    "metamaskadmin",
+    "metamask-admin",
+    "metamasksupport",
+    "metamask-support",
+    "metamaskofficial",
+    "metamask-official",
+    "ethereumadmin",
+    "ethereum-admin",
+    "ethereumsupport",
+    "ethereum-support",
+    "ethereumofficial",
+    "ethereum-official",
+    "ensadmin",
+    "ens-admin",
+    "enssupport",
+    "ens-support",
+    "ensofficial",
+    "ens-official",
+    "circlehelp",
+    "circle-help",
+    "circleteam",
+    "circle-team",
+    "circletreasury",
+    "circle-treasury",
+    "circlewallet",
+    "circle-wallet",
+    "circlebridge",
+    "circle-bridge",
+    "circleexplorer",
+    "circle-explorer",
+    "circlefaucet",
+    "circle-faucet",
+    "circlesecurity",
+    "circle-security",
+    "circleverified",
+    "circle-verified",
+    "usdchelp",
+    "usdc-help",
+    "usdcteam",
+    "usdc-team",
+    "usdctreasury",
+    "usdc-treasury",
+    "usdcwallet",
+    "usdc-wallet",
+    "usdcbridge",
+    "usdc-bridge",
+    "usdcexplorer",
+    "usdc-explorer",
+    "usdcfaucet",
+    "usdc-faucet",
+    "usdcsecurity",
+    "usdc-security",
+    "usdcverified",
+    "usdc-verified",
+    "archelp",
+    "arc-help",
+    "arcteam",
+    "arc-team",
+    "arctreasury",
+    "arc-treasury",
+    "arcwallet",
+    "arc-wallet",
+    "arcbridge",
+    "arc-bridge",
+    "arcexplorer",
+    "arc-explorer",
+    "arcfaucet",
+    "arc-faucet",
+    "arcsecurity",
+    "arc-security",
+    "arcverified",
+    "arc-verified",
+    "circle-pay",
+    "arc-network",
+    "coin-base",
+    "open-sea",
+    "meta-mask",
+    "pay-pal",
+    "official-support",
+    "officialsupport",
+    "official-team",
+    "officialteam",
+    "verified-team",
+    "verifiedteam",
+    "security-team",
+    "securityteam",
+    "support-team",
+    "supportteam",
+    "admin-team",
+    "adminteam",
+    "wallet-support",
+    "walletsupport",
+    "bridge-official",
+    "bridgeofficial",
+    "registry-admin",
+    "registryadmin",
+    "registrar-admin",
+    "registraradmin",
+    "resolver-admin",
+    "resolveradmin",
+    "treasury-admin",
+    "treasuryadmin",
+    "usd",
+    "usdname",
+    "usdnames"
+  ],
+  "entries": [
+    {
+      "label": "circle",
+      "reason": "Circle brand. Blocks public registration of a label that would impersonate Circle."
+    },
+    {
+      "label": "circlepay",
+      "reason": "Circle Pay brand. Blocks public registration of a label that would impersonate Circle Pay."
+    },
+    {
+      "label": "usdc",
+      "reason": "USDC ticker. Blocks a label that would impersonate the stablecoin used for payment on Arc."
+    },
+    {
+      "label": "eurc",
+      "reason": "EURC ticker. Blocks a label that would impersonate the euro stablecoin."
+    },
+    {
+      "label": "arc",
+      "reason": "Arc network name. Blocks a label that would impersonate the network this service runs on."
+    },
+    {
+      "label": "arcnetwork",
+      "reason": "Arc network name. Blocks a concatenated impersonation of the network name."
+    },
+    {
+      "label": "coinbase",
+      "reason": "Coinbase brand. Blocks a label that would impersonate the exchange."
+    },
+    {
+      "label": "opensea",
+      "reason": "OpenSea brand. Blocks a label that would impersonate the marketplace."
+    },
+    {
+      "label": "binance",
+      "reason": "Binance brand. Blocks a label that would impersonate the exchange."
+    },
+    {
+      "label": "kraken",
+      "reason": "Kraken brand. Blocks a label that would impersonate the exchange."
+    },
+    {
+      "label": "paypal",
+      "reason": "PayPal brand. Blocks a label that would impersonate the payment company."
+    },
+    {
+      "label": "stripe",
+      "reason": "Stripe brand. Blocks a label that would impersonate the payment company."
+    },
+    {
+      "label": "metamask",
+      "reason": "MetaMask brand. Blocks a label that would impersonate the wallet."
+    },
+    {
+      "label": "ethereum",
+      "reason": "Ethereum network name. Blocks a label that implies that network's authority."
+    },
+    {
+      "label": "ens",
+      "reason": "ENS brand. This naming service is not ENS and must not present itself as ENS."
+    },
+    {
+      "label": "admin",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "administrator",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "support",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "help",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "security",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "official",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "verified",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "team",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "treasury",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "faucet",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "bridge",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "explorer",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "wallet",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "registry",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "registrar",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "resolver",
+      "reason": "Authority or infrastructure role. Blocks a label that implies official control or support."
+    },
+    {
+      "label": "circleadmin",
+      "reason": "Impersonation combination of circle and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-admin",
+      "reason": "Impersonation combination of circle and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlesupport",
+      "reason": "Impersonation combination of circle and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-support",
+      "reason": "Impersonation combination of circle and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circleofficial",
+      "reason": "Impersonation combination of circle and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-official",
+      "reason": "Impersonation combination of circle and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlepayadmin",
+      "reason": "Impersonation combination of circlepay and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlepay-admin",
+      "reason": "Impersonation combination of circlepay and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlepaysupport",
+      "reason": "Impersonation combination of circlepay and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlepay-support",
+      "reason": "Impersonation combination of circlepay and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlepayofficial",
+      "reason": "Impersonation combination of circlepay and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlepay-official",
+      "reason": "Impersonation combination of circlepay and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcadmin",
+      "reason": "Impersonation combination of usdc and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-admin",
+      "reason": "Impersonation combination of usdc and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcsupport",
+      "reason": "Impersonation combination of usdc and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-support",
+      "reason": "Impersonation combination of usdc and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcofficial",
+      "reason": "Impersonation combination of usdc and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-official",
+      "reason": "Impersonation combination of usdc and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "eurcadmin",
+      "reason": "Impersonation combination of eurc and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "eurc-admin",
+      "reason": "Impersonation combination of eurc and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "eurcsupport",
+      "reason": "Impersonation combination of eurc and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "eurc-support",
+      "reason": "Impersonation combination of eurc and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "eurcofficial",
+      "reason": "Impersonation combination of eurc and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "eurc-official",
+      "reason": "Impersonation combination of eurc and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcadmin",
+      "reason": "Impersonation combination of arc and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-admin",
+      "reason": "Impersonation combination of arc and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcsupport",
+      "reason": "Impersonation combination of arc and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-support",
+      "reason": "Impersonation combination of arc and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcofficial",
+      "reason": "Impersonation combination of arc and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-official",
+      "reason": "Impersonation combination of arc and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "coinbaseadmin",
+      "reason": "Impersonation combination of coinbase and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "coinbase-admin",
+      "reason": "Impersonation combination of coinbase and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "coinbasesupport",
+      "reason": "Impersonation combination of coinbase and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "coinbase-support",
+      "reason": "Impersonation combination of coinbase and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "coinbaseofficial",
+      "reason": "Impersonation combination of coinbase and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "coinbase-official",
+      "reason": "Impersonation combination of coinbase and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "openseaadmin",
+      "reason": "Impersonation combination of opensea and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "opensea-admin",
+      "reason": "Impersonation combination of opensea and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "openseasupport",
+      "reason": "Impersonation combination of opensea and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "opensea-support",
+      "reason": "Impersonation combination of opensea and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "openseaofficial",
+      "reason": "Impersonation combination of opensea and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "opensea-official",
+      "reason": "Impersonation combination of opensea and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "binanceadmin",
+      "reason": "Impersonation combination of binance and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "binance-admin",
+      "reason": "Impersonation combination of binance and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "binancesupport",
+      "reason": "Impersonation combination of binance and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "binance-support",
+      "reason": "Impersonation combination of binance and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "binanceofficial",
+      "reason": "Impersonation combination of binance and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "binance-official",
+      "reason": "Impersonation combination of binance and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "krakenadmin",
+      "reason": "Impersonation combination of kraken and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "kraken-admin",
+      "reason": "Impersonation combination of kraken and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "krakensupport",
+      "reason": "Impersonation combination of kraken and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "kraken-support",
+      "reason": "Impersonation combination of kraken and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "krakenofficial",
+      "reason": "Impersonation combination of kraken and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "kraken-official",
+      "reason": "Impersonation combination of kraken and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "paypaladmin",
+      "reason": "Impersonation combination of paypal and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "paypal-admin",
+      "reason": "Impersonation combination of paypal and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "paypalsupport",
+      "reason": "Impersonation combination of paypal and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "paypal-support",
+      "reason": "Impersonation combination of paypal and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "paypalofficial",
+      "reason": "Impersonation combination of paypal and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "paypal-official",
+      "reason": "Impersonation combination of paypal and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "stripeadmin",
+      "reason": "Impersonation combination of stripe and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "stripe-admin",
+      "reason": "Impersonation combination of stripe and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "stripesupport",
+      "reason": "Impersonation combination of stripe and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "stripe-support",
+      "reason": "Impersonation combination of stripe and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "stripeofficial",
+      "reason": "Impersonation combination of stripe and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "stripe-official",
+      "reason": "Impersonation combination of stripe and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "metamaskadmin",
+      "reason": "Impersonation combination of metamask and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "metamask-admin",
+      "reason": "Impersonation combination of metamask and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "metamasksupport",
+      "reason": "Impersonation combination of metamask and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "metamask-support",
+      "reason": "Impersonation combination of metamask and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "metamaskofficial",
+      "reason": "Impersonation combination of metamask and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "metamask-official",
+      "reason": "Impersonation combination of metamask and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ethereumadmin",
+      "reason": "Impersonation combination of ethereum and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ethereum-admin",
+      "reason": "Impersonation combination of ethereum and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ethereumsupport",
+      "reason": "Impersonation combination of ethereum and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ethereum-support",
+      "reason": "Impersonation combination of ethereum and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ethereumofficial",
+      "reason": "Impersonation combination of ethereum and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ethereum-official",
+      "reason": "Impersonation combination of ethereum and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ensadmin",
+      "reason": "Impersonation combination of ens and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ens-admin",
+      "reason": "Impersonation combination of ens and admin. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "enssupport",
+      "reason": "Impersonation combination of ens and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ens-support",
+      "reason": "Impersonation combination of ens and support. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ensofficial",
+      "reason": "Impersonation combination of ens and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "ens-official",
+      "reason": "Impersonation combination of ens and official. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlehelp",
+      "reason": "Impersonation combination of circle and help. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-help",
+      "reason": "Impersonation combination of circle and help. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circleteam",
+      "reason": "Impersonation combination of circle and team. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-team",
+      "reason": "Impersonation combination of circle and team. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circletreasury",
+      "reason": "Impersonation combination of circle and treasury. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-treasury",
+      "reason": "Impersonation combination of circle and treasury. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlewallet",
+      "reason": "Impersonation combination of circle and wallet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-wallet",
+      "reason": "Impersonation combination of circle and wallet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlebridge",
+      "reason": "Impersonation combination of circle and bridge. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-bridge",
+      "reason": "Impersonation combination of circle and bridge. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circleexplorer",
+      "reason": "Impersonation combination of circle and explorer. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-explorer",
+      "reason": "Impersonation combination of circle and explorer. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlefaucet",
+      "reason": "Impersonation combination of circle and faucet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-faucet",
+      "reason": "Impersonation combination of circle and faucet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circlesecurity",
+      "reason": "Impersonation combination of circle and security. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-security",
+      "reason": "Impersonation combination of circle and security. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circleverified",
+      "reason": "Impersonation combination of circle and verified. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-verified",
+      "reason": "Impersonation combination of circle and verified. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdchelp",
+      "reason": "Impersonation combination of usdc and help. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-help",
+      "reason": "Impersonation combination of usdc and help. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcteam",
+      "reason": "Impersonation combination of usdc and team. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-team",
+      "reason": "Impersonation combination of usdc and team. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdctreasury",
+      "reason": "Impersonation combination of usdc and treasury. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-treasury",
+      "reason": "Impersonation combination of usdc and treasury. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcwallet",
+      "reason": "Impersonation combination of usdc and wallet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-wallet",
+      "reason": "Impersonation combination of usdc and wallet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcbridge",
+      "reason": "Impersonation combination of usdc and bridge. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-bridge",
+      "reason": "Impersonation combination of usdc and bridge. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcexplorer",
+      "reason": "Impersonation combination of usdc and explorer. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-explorer",
+      "reason": "Impersonation combination of usdc and explorer. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcfaucet",
+      "reason": "Impersonation combination of usdc and faucet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-faucet",
+      "reason": "Impersonation combination of usdc and faucet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcsecurity",
+      "reason": "Impersonation combination of usdc and security. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-security",
+      "reason": "Impersonation combination of usdc and security. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdcverified",
+      "reason": "Impersonation combination of usdc and verified. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "usdc-verified",
+      "reason": "Impersonation combination of usdc and verified. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "archelp",
+      "reason": "Impersonation combination of arc and help. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-help",
+      "reason": "Impersonation combination of arc and help. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcteam",
+      "reason": "Impersonation combination of arc and team. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-team",
+      "reason": "Impersonation combination of arc and team. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arctreasury",
+      "reason": "Impersonation combination of arc and treasury. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-treasury",
+      "reason": "Impersonation combination of arc and treasury. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcwallet",
+      "reason": "Impersonation combination of arc and wallet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-wallet",
+      "reason": "Impersonation combination of arc and wallet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcbridge",
+      "reason": "Impersonation combination of arc and bridge. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-bridge",
+      "reason": "Impersonation combination of arc and bridge. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcexplorer",
+      "reason": "Impersonation combination of arc and explorer. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-explorer",
+      "reason": "Impersonation combination of arc and explorer. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcfaucet",
+      "reason": "Impersonation combination of arc and faucet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-faucet",
+      "reason": "Impersonation combination of arc and faucet. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcsecurity",
+      "reason": "Impersonation combination of arc and security. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-security",
+      "reason": "Impersonation combination of arc and security. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arcverified",
+      "reason": "Impersonation combination of arc and verified. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "arc-verified",
+      "reason": "Impersonation combination of arc and verified. A blocklist cannot catch every variation."
+    },
+    {
+      "label": "circle-pay",
+      "reason": "Hyphenated Circle Pay impersonation."
+    },
+    {
+      "label": "arc-network",
+      "reason": "Hyphenated Arc network impersonation."
+    },
+    {
+      "label": "coin-base",
+      "reason": "Hyphenated Coinbase impersonation."
+    },
+    {
+      "label": "open-sea",
+      "reason": "Hyphenated OpenSea impersonation."
+    },
+    {
+      "label": "meta-mask",
+      "reason": "Hyphenated MetaMask impersonation."
+    },
+    {
+      "label": "pay-pal",
+      "reason": "Hyphenated PayPal impersonation."
+    },
+    {
+      "label": "official-support",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "officialsupport",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "official-team",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "officialteam",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "verified-team",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "verifiedteam",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "security-team",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "securityteam",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "support-team",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "supportteam",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "admin-team",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "adminteam",
+      "reason": "Combined authority claim."
+    },
+    {
+      "label": "wallet-support",
+      "reason": "Combined wallet-support claim."
+    },
+    {
+      "label": "walletsupport",
+      "reason": "Combined wallet-support claim."
+    },
+    {
+      "label": "bridge-official",
+      "reason": "Combined bridge-authority claim."
+    },
+    {
+      "label": "bridgeofficial",
+      "reason": "Combined bridge-authority claim."
+    },
+    {
+      "label": "registry-admin",
+      "reason": "Combined registry-authority claim."
+    },
+    {
+      "label": "registryadmin",
+      "reason": "Combined registry-authority claim."
+    },
+    {
+      "label": "registrar-admin",
+      "reason": "Combined registrar-authority claim."
+    },
+    {
+      "label": "registraradmin",
+      "reason": "Combined registrar-authority claim."
+    },
+    {
+      "label": "resolver-admin",
+      "reason": "Combined resolver-authority claim."
+    },
+    {
+      "label": "resolveradmin",
+      "reason": "Combined resolver-authority claim."
+    },
+    {
+      "label": "treasury-admin",
+      "reason": "Combined treasury-authority claim."
+    },
+    {
+      "label": "treasuryadmin",
+      "reason": "Combined treasury-authority claim."
+    },
+    {
+      "label": "usd",
+      "reason": "The naming suffix itself, reserved so it cannot be registered as a lookalike of this service."
+    },
+    {
+      "label": "usdname",
+      "reason": "Service identity label."
+    },
+    {
+      "label": "usdnames",
+      "reason": "Service identity label."
+    }
+  ]
+}

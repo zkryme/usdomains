@@ -1,0 +1,17 @@
+{
+  "name": "usd-names",
+  "private": true,
+  "workspaces": [
+    "sdk",
+    "web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace web",
+    "build": "npm run build --workspace web",
+    "test:sdk": "tsx sdk/src/parse.test.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

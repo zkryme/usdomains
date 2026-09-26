@@ -1,0 +1,28 @@
+{
+  "source": "https://docs.arc.io/arc/references/rpc-endpoints and https://docs.arc.io/arc/references/contract-addresses, checked 2026-09-26",
+  "payment": {
+    "route": "erc20",
+    "erc20Decimals": 6,
+    "nativeDecimals": 18,
+    "note": "Prices are 6-decimal ERC-20 base units. Native msg.value is 18 decimals and is rejected. Do not convert between them in payment math."
+  },
+  "testnet": {
+    "chainId": 5042002,
+    "name": "Arc Testnet",
+    "rpc": "https://rpc.testnet.arc.io",
+    "ws": "wss://rpc.testnet.arc.io",
+    "explorer": "https://explorer.testnet.arc.io",
+    "faucet": "https://faucet.circle.com",
+    "usdc": "0x3600000000000000000000000000000000000000",
+    "deploymentsEnabled": true
+  },
+  "mainnet": {
+    "chainId": 5042,
+    "name": "Arc",
+    "rpc": "https://rpc.mainnet.arc.io",
+    "explorer": "https://explorer.arc.io",
+    "usdc": "0x3600000000000000000000000000000000000000",
+    "deploymentsEnabled": false,
+    "note": "Configuration only. Do not deploy or accept real funds from this repository state."
+  }
+}
