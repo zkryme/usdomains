@@ -66,7 +66,7 @@ export function SearchForm() {
       <div className="searchbar">
         <input
           aria-label="Name"
-          placeholder="alice"
+          placeholder="jeremy"
           value={value}
           onChange={(event) => {
             const next = event.target.value.replace(/\.usd$/i, "");

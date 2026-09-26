@@ -1,19 +1,16 @@
 "use client";
 
-import {
-  registrarAbi,
-  usdcAbi,
-  parseUsdName,
-} from "@usd-names/sdk";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { registrarAbi, usdcAbi, parseUsdName } from "@usd-names/sdk";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { bytesToHex, isAddress, zeroAddress, type Address, type Hex } from "viem";
-import { useAccount, useChainId, usePublicClient, useReadContract, useWriteContract } from "wagmi";
-import { ConfirmAddress } from "@/components/address";
+import { bytesToHex, getAddress, isAddress, zeroAddress, type Address, type Hex } from "viem";
+import { useAccount, useChainId, usePublicClient, useReadContract, useSwitchChain, useWriteContract } from "wagmi";
+import { ConfirmAddress, recipientIssue } from "@/components/address";
 import { deploymentFor } from "@/lib/deployment";
 import { arcFees, formatUsdc, formatWhen, txError, txKind } from "@/lib/format";
 import { annualUnits } from "@/lib/pricing";
-import { reservationDisclosure, reservedReason } from "@/lib/reserved";
+import { reservedReason } from "@/lib/reserved";
 
 type Draft = {
   secret: Hex;
@@ -31,22 +28,37 @@ function draftKey(chainId: number, label: string, payer: string) {
   return `usd-commit:${chainId}:${label}:${payer.toLowerCase()}`;
 }
 
+function shortAddress(value: string) {
+  if (!isAddress(value)) return "Not set";
+  return `${value.slice(0, 6)}…${value.slice(-4)}`;
+}
+
+function sameAddress(left: string, right: string) {
+  return isAddress(left) && isAddress(right) && getAddress(left) === getAddress(right);
+}
+
 export function RegisterFlow({ raw }: { raw: string }) {
   const parsed = useMemo(() => parseUsdName(raw.includes(".") ? raw : `${raw}.usd`), [raw]);
   const label = parsed.ok ? parsed.label : "";
   const chainId = useChainId();
   const { address: payer, isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const { switchChain, isPending: switching } = useSwitchChain();
   const deployment = deploymentFor(isConnected ? chainId : 5042);
-  const live = Boolean(parsed.ok && deployment.deployed && deployment.registrar && deployment.network !== "other");
+  const wrongNetwork = isConnected && deployment.network !== "mainnet";
+  const live = Boolean(parsed.ok && deployment.deployed && deployment.registrar && !wrongNetwork);
   const registrar = (deployment.registrar ?? ZERO) as Address;
 
   const [years, setYears] = useState(1);
   const [recipient, setRecipient] = useState("");
+  const [recipientTouched, setRecipientTouched] = useState(false);
+  const [editingRecipient, setEditingRecipient] = useState(false);
   const [recipientConfirmed, setRecipientConfirmed] = useState(false);
   const [payConfirmed, setPayConfirmed] = useState(false);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [notice, setNotice] = useState<Notice>(null);
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
 
   const publicClient = usePublicClient({ chainId: deployment.chainId });
@@ -73,12 +85,6 @@ export function RegisterFlow({ raw }: { raw: string }) {
     args: [label.length <= 3 ? 3 : label.length === 4 ? 4 : 5],
     query: { enabled: live },
   });
-  const grace = useReadContract({
-    address: registrar,
-    abi: registrarAbi,
-    functionName: "graceSchedule",
-    query: { enabled: live },
-  });
   const minAge = useReadContract({
     address: registrar,
     abi: registrarAbi,
@@ -98,11 +104,22 @@ export function RegisterFlow({ raw }: { raw: string }) {
     args: [draft?.commitment ?? `0x${"0".repeat(64)}`],
     query: { enabled: live && Boolean(draft) },
   });
+  const balance = useReadContract({
+    address: deployment.usdc,
+    abi: usdcAbi,
+    functionName: "balanceOf",
+    args: [payer ?? ZERO],
+    query: { enabled: live && Boolean(payer) },
+  });
 
   useEffect(() => {
     const timer = setInterval(() => setNow(Math.floor(Date.now() / 1000)), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (payer && !recipientTouched) setRecipient(payer);
+  }, [payer, recipientTouched]);
 
   useEffect(() => {
     setRecipientConfirmed(false);
@@ -113,7 +130,11 @@ export function RegisterFlow({ raw }: { raw: string }) {
     const stored = window.localStorage.getItem(draftKey(deployment.chainId, parsed.label, payer));
     if (!stored) return;
     try {
-      setDraft(JSON.parse(stored) as Draft);
+      const next = JSON.parse(stored) as Draft;
+      setDraft(next);
+      setRecipient(next.recipient);
+      setYears(next.years);
+      setRecipientTouched(true);
     } catch {
       window.localStorage.removeItem(draftKey(deployment.chainId, parsed.label, payer));
     }
@@ -124,6 +145,11 @@ export function RegisterFlow({ raw }: { raw: string }) {
       <article className="card">
         <h2>This name cannot be registered</h2>
         <p>{parsed.reason}</p>
+        <p>
+          <Link className="rules-link" href="/docs#register">
+            Registration rules
+          </Link>
+        </p>
       </article>
     );
   }
@@ -131,9 +157,6 @@ export function RegisterFlow({ raw }: { raw: string }) {
   const availability = inspect.data ? Number(inspect.data[0]) : null;
   const seedReason = reservedReason(parsed.label);
   const reserved = Boolean(inspect.data?.[2]) || (!deployment.deployed && seedReason != null);
-  const owner = inspect.data?.[3];
-  const expiry = inspect.data?.[4] ?? 0n;
-  const graceEnds = inspect.data?.[5] ?? 0n;
   const paused = Boolean(inspect.data?.[7]);
   const amount = quote.data ?? 0n;
   const minWait = Number(minAge.data ?? 60n);
@@ -142,10 +165,22 @@ export function RegisterFlow({ raw }: { raw: string }) {
   const ready = committed > 0 && now >= committed + minWait && now <= committed + maxWait;
   const expiredCommit = committed > 0 && now > committed + maxWait;
   const canRegister = availability === 1 || availability === 5;
-  const writesDisabled = !live || paused || !canRegister;
+  const checking = live && availability == null && (inspect.isLoading || inspect.isFetching);
+  const writesDisabled = !live || paused || !canRegister || checking;
+  const perYear = prices.data?.[0] ?? annualUnits(label.length);
+  const estimated = perYear * BigInt(years);
+  const total = quote.data ?? estimated;
+  const quoteLive = live && quote.data != null;
+  const shortBalance = live && canRegister && balance.data != null && balance.data < total;
+  const issue = recipient.trim() ? recipientIssue(recipient) : isConnected ? "Enter an EVM address." : null;
+  const customRecipient = Boolean(payer) && recipient.trim().length > 0 && payer != null && !sameAddress(recipient, payer);
+  const recipientReady = issue == null && (!customRecipient || recipientConfirmed);
+  const networkLabel = !isConnected ? "Not connected" : wrongNetwork ? "Wrong network" : "Arc · 5042";
+  const showSteps = live && (canRegister || Boolean(draft));
+  const priceChanges = Boolean(prices.data && prices.data[2] > 0n);
 
   async function commit() {
-    if (!payer || !publicClient || !isAddress(recipient) || !recipientConfirmed) return;
+    if (!payer || !publicClient || issue || !recipientReady || !isAddress(recipient)) return;
     setBusy(true);
     setNotice({ kind: "pending", detail: "Confirm the commit in your wallet. The name is not registered yet." });
     try {
@@ -172,9 +207,10 @@ export function RegisterFlow({ raw }: { raw: string }) {
       const next: Draft = { secret, recipient, years, payer, commitment };
       window.localStorage.setItem(draftKey(deployment.chainId, label, payer), JSON.stringify(next));
       setDraft(next);
+      setEditingRecipient(false);
       setNotice({
         kind: "success",
-        detail: "Commit confirmed. This name is not registered yet. Wait 60 seconds, then reveal from this same wallet.",
+        detail: "Commit confirmed. This name is not registered yet. The next step opens after a short wait.",
       });
     } catch (cause) {
       setNotice(noticeFrom(cause, "The commit did not land. The name was not registered."));
@@ -233,155 +269,196 @@ export function RegisterFlow({ raw }: { raw: string }) {
     }
   }
 
-  const perYear = prices.data?.[0] ?? annualUnits(label.length);
-  const total = quote.data ?? perYear * BigInt(years);
-  const networkLabel = !isConnected ? "Not connected" : deployment.network === "mainnet" ? "Arc · 5042" : "Wrong network";
+  async function copyRecipient() {
+    if (!isAddress(recipient)) return;
+    await navigator.clipboard.writeText(getAddress(recipient));
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1200);
+  }
 
   return (
-    <div className="grid">
-      <article className="card stack">
-        <div className="row">
-          <h2 style={{ margin: 0 }}>{parsed.name}</h2>
-          <Status availability={availability} reserved={reserved} paused={paused} deployed={deployment.deployed} />
-        </div>
-        <p className="muted">
-          {parsed.label.length} characters. Letters a–z, digits, and single hyphens between characters.
-        </p>
-        <Explanation
+    <div className="checkout">
+      <div className="checkout-head">
+        <h1>{parsed.name}</h1>
+        <Status
           availability={availability}
           reserved={reserved}
-          deployed={deployment.deployed}
-          seedReason={seedReason}
+          paused={paused}
+          deployed={deployment.deployed && !wrongNetwork}
+          checking={checking}
         />
-        {owner && owner !== ZERO ? (
-          <p className="muted">
-            Current NFT holder: <code className="mono">{owner}</code>
-            {expiry > 0n ? `. Expiry ${formatWhen(expiry)}. Grace ends ${formatWhen(graceEnds)}.` : ""}
-          </p>
-        ) : null}
-        {availability === 3 || availability === 4 ? <Link href={`/manage/${parsed.label}`}>Manage this name</Link> : null}
+      </div>
 
-        <div className="steps">
-          <span className={!draft ? "on" : ""}>1. Commit</span>
-          <span className={draft && !ready ? "on" : ""}>2. Wait</span>
-          <span className={ready ? "on" : ""}>3. Pay and reveal</span>
-        </div>
-
-        {!deployment.deployed ? (
-          <p>Contracts are not deployed on this network, so availability is only a local format check and no payment is offered.</p>
-        ) : null}
-        {paused ? <p>New registrations are paused. A pause does not stop renewal, transfer, or record updates.</p> : null}
-
-        <label className="field">
-          <span>Term, 1 to 10 years</span>
-          <select value={years} onChange={(event) => setYears(Number(event.target.value))} disabled={Boolean(draft)}>
-            {Array.from({ length: 10 }, (_, index) => index + 1).map((year) => (
-              <option key={year} value={year}>
-                {year} year{year === 1 ? "" : "s"}
-                {quote.data != null && year === years ? ` · ${formatUsdc(quote.data)} USDC` : ""}
-              </option>
-            ))}
-          </select>
-        </label>
-        <p className="muted">
-          {formatUsdc(perYear)} USDC per year. {years} year{years === 1 ? "" : "s"} costs {formatUsdc(total)} USDC.
+      {wrongNetwork ? (
+        <p className="notice">This wallet is not on Arc. Registration uses chain id 5042.</p>
+      ) : !deployment.deployed ? (
+        <p className="notice">Preview only. Registration is not available on this network yet.</p>
+      ) : checking ? (
+        <p className="notice pending">Checking this name on Arc.</p>
+      ) : reserved ? (
+        <p className="notice">{seedReason ?? "This name is reserved."}</p>
+      ) : paused ? (
+        <p className="notice">New registrations are paused.</p>
+      ) : availability === 3 ? (
+        <p className="notice">
+          This name is already registered. <Link href={`/manage/${parsed.label}`}>Manage it</Link>
         </p>
-        <div className="summary">
-          <h3>Before you confirm</h3>
+      ) : availability === 4 ? (
+        <p className="notice">
+          This name is in its grace period. <Link href={`/manage/${parsed.label}`}>Manage it</Link>
+        </p>
+      ) : shortBalance ? (
+        <p className="notice failed">This wallet does not have enough USDC for this registration.</p>
+      ) : null}
+
+      <div className="checkout-grid">
+        <article className="card stack">
+          {showSteps ? (
+            <div className="steps" aria-label="Registration steps">
+              <span className={!draft ? "on" : ""}>Commit</span>
+              <span className={draft && !ready ? "on" : ""}>Wait</span>
+              <span className={ready ? "on" : ""}>Register</span>
+            </div>
+          ) : null}
+
+          <label className="field">
+            <span className="label-row">
+              <span>Registration term</span>
+              <Link href="/docs#register">Registration rules</Link>
+            </span>
+            <select value={years} onChange={(event) => setYears(Number(event.target.value))} disabled={Boolean(draft)}>
+              {Array.from({ length: 10 }, (_, index) => index + 1).map((year) => (
+                <option key={year} value={year}>
+                  {year} year{year === 1 ? "" : "s"}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className="field">
+            <span>NFT recipient</span>
+            {editingRecipient && !draft ? (
+              <input
+                value={recipient}
+                onChange={(event) => {
+                  setRecipientTouched(true);
+                  setRecipient(event.target.value.trim());
+                }}
+                placeholder="0x"
+                spellCheck={false}
+                aria-label="NFT recipient"
+              />
+            ) : (
+              <div className="recipient-line">
+                <code className="mono">{shortAddress(recipient)}</code>
+                {draft ? null : (
+                  <button className="quiet" type="button" onClick={() => setEditingRecipient(true)}>
+                    Change
+                  </button>
+                )}
+              </div>
+            )}
+            {issue && (editingRecipient || recipientTouched) ? <p className="error">{issue}</p> : null}
+            {editingRecipient && !draft && recipient.trim() && !issue ? (
+              <button className="quiet" type="button" onClick={() => setEditingRecipient(false)}>
+                Use this address
+              </button>
+            ) : null}
+          </div>
+
+          {customRecipient && !draft ? (
+            <ConfirmAddress
+              title="Full recipient address"
+              address={recipient}
+              checked={recipientConfirmed}
+              onChecked={setRecipientConfirmed}
+              note="I have checked every character. The commit binds the NFT to this address."
+            />
+          ) : null}
+
+          {draft && committed > 0 && now < committed + minWait ? (
+            <p className="muted">
+              Wait {committed + minWait - now}s. This commitment expires {formatWhen(committed + maxWait)}.
+            </p>
+          ) : null}
+          {draft && ready ? <p className="muted">You can register now. This commitment expires {formatWhen(committed + maxWait)}.</p> : null}
+          {expiredCommit ? <p className="error">This commitment has expired. Commit again. The old secret cannot be revealed.</p> : null}
+          {draft && committed === 0 ? <p className="muted">Waiting for Arc to record the commit.</p> : null}
+
+          {!isConnected ? (
+            <button className="primary" type="button" onClick={() => openConnectModal?.()}>
+              Connect a wallet
+            </button>
+          ) : wrongNetwork ? (
+            <button className="primary" type="button" disabled={switching} onClick={() => switchChain({ chainId: 5042 })}>
+              Switch to Arc
+            </button>
+          ) : (
+            <button
+              className="primary"
+              type="button"
+              disabled={busy || writesDisabled || !recipientReady || shortBalance || Boolean(draft && !expiredCommit)}
+              onClick={() => void commit()}
+            >
+              {expiredCommit ? "Commit again" : "Commit"}
+            </button>
+          )}
+
+          {draft && !wrongNetwork ? (
+            <div className="stack">
+              <ConfirmAddress
+                title="USDC is pulled to this registrar"
+                address={registrar}
+                checked={payConfirmed}
+                onChecked={setPayConfirmed}
+                note={`I approve paying exactly ${formatUsdc(amount)} USDC to register ${parsed.name} for ${draft.recipient}.`}
+              />
+              <button className="primary" type="button" disabled={busy || !ready || !payConfirmed || writesDisabled || shortBalance} onClick={() => void reveal()}>
+                Register
+              </button>
+            </div>
+          ) : null}
+
+          {notice ? (
+            <p className={`notice ${notice.kind}`} role="status">
+              {notice.detail}
+            </p>
+          ) : null}
+        </article>
+
+        <aside className="card summary order">
+          <h2>Order summary</h2>
           <dl>
             <dt>Name</dt>
             <dd>{parsed.name}</dd>
-            <dt>Term</dt>
+            <dt>Registration term</dt>
             <dd>
               {years} year{years === 1 ? "" : "s"}
             </dd>
-            <dt>Annual price</dt>
+            <dt>Price per year</dt>
             <dd>{formatUsdc(perYear)} USDC</dd>
-            <dt>Total</dt>
+            <dt>{quoteLive ? "Total" : "Estimated total"}</dt>
             <dd>{formatUsdc(total)} USDC</dd>
-            <dt>Wallet</dt>
-            <dd>{payer ?? "Not connected"}</dd>
+            <dt>NFT recipient</dt>
+            <dd className="recipient-line">
+              <span className="mono">{shortAddress(recipient)}</span>
+              {isAddress(recipient) ? (
+                <button className="copy" type="button" onClick={() => void copyRecipient()}>
+                  {copied ? "Copied" : "Copy"}
+                </button>
+              ) : null}
+            </dd>
             <dt>Network</dt>
             <dd>{networkLabel}</dd>
           </dl>
-        </div>
-        <p className="muted">
-          {quote.data != null
-            ? `The contract will pull exactly ${formatUsdc(total)} USDC, 6 decimals. If a scheduled price arrives before you reveal, it charges the new price.`
-            : "The listed total uses the current yearly price. Payment is not offered until the contracts are deployed."}
-        </p>
-
-        <label className="field">
-          <span>NFT recipient</span>
-          <input
-            value={recipient}
-            onChange={(event) => setRecipient(event.target.value.trim())}
-            placeholder={payer ?? "0x"}
-            spellCheck={false}
-            disabled={Boolean(draft)}
-          />
-        </label>
-        <ConfirmAddress
-          title="Full recipient address"
-          address={recipient}
-          checked={recipientConfirmed}
-          onChecked={setRecipientConfirmed}
-          note="I have checked every character of this address. The commit binds the name to it."
-        />
-        <button
-          className="primary"
-          disabled={busy || writesDisabled || !isConnected || !isAddress(recipient) || !recipientConfirmed || Boolean(draft && !expiredCommit)}
-          onClick={() => void commit()}
-        >
-          {expiredCommit ? "Commit again" : "Commit name"}
-        </button>
-
-        {draft ? (
-          <div className="stack">
+          {quoteLive && priceChanges ? (
             <p className="muted">
-              Committed for <code className="mono">{draft.recipient}</code> for {draft.years} year
-              {draft.years === 1 ? "" : "s"}. {committed === 0 ? "Waiting for the chain." : `Committed at ${formatWhen(committed)}.`}
-              {committed > 0 && now < committed + minWait ? ` Reveal opens in ${committed + minWait - now}s.` : ""}
-              {expiredCommit ? " This commitment has expired. Commit again. The old secret cannot be revealed." : ""}
+              A price change is scheduled for {formatWhen(prices.data?.[2] ?? 0)}. The total updates from the registrar.{" "}
+              <Link href="/docs#price">Price rules</Link>
             </p>
-            <ConfirmAddress
-              title="USDC is pulled to this registrar"
-              address={registrar}
-              checked={payConfirmed}
-              onChecked={setPayConfirmed}
-              note={`I approve paying exactly ${formatUsdc(amount)} USDC (6 decimals) to register ${parsed.name} for ${draft.recipient}.`}
-            />
-            <button className="primary" disabled={busy || !ready || !payConfirmed || writesDisabled} onClick={() => void reveal()}>
-              Approve and reveal
-            </button>
-          </div>
-        ) : null}
-        {notice ? (
-          <p className={`notice ${notice.kind}`} role="status">
-            {notice.detail}
-          </p>
-        ) : null}
-      </article>
-      <aside className="card stack">
-        <h3>Price and grace</h3>
-        <p className="muted">
-          Current annual price for this length: {prices.data ? `${formatUsdc(prices.data[0])} USDC` : `${formatUsdc(annualUnits(label.length))} USDC`}.
-          {prices.data && prices.data[2] > 0n
-            ? ` A change to ${formatUsdc(prices.data[1])} USDC is scheduled for ${formatWhen(prices.data[2])}.`
-            : " No price change is scheduled."}
-        </p>
-        <p className="muted">
-          Grace is {grace.data ? `${Number(grace.data[0]) / 86400} days` : "30 days"}.
-          {grace.data && grace.data[2] > 0n
-            ? ` A change to ${Number(grace.data[1]) / 86400} days is scheduled for ${formatWhen(grace.data[2])}.`
-            : " No grace change is scheduled."}
-        </p>
-        <p className="muted">
-          The commitment waits at least {minWait} seconds and expires after {Math.round(maxWait / 3600)} hours. Keep this
-          browser tab; the secret is stored locally for a retry.
-        </p>
-        <p className="price-strip">3 characters: 30 USDC/year · 4 characters: 20 USDC/year · 5–32 characters: 10 USDC/year</p>
-      </aside>
+          ) : null}
+        </aside>
+      </div>
     </div>
   );
 }
@@ -391,67 +468,22 @@ function Status({
   reserved,
   paused,
   deployed,
+  checking,
 }: {
   availability: number | null;
   reserved: boolean;
   paused: boolean;
   deployed: boolean;
+  checking: boolean;
 }) {
-  if (!deployed && !reserved) return <span className="pill">Format only</span>;
   if (reserved || availability === 2) return <span className="pill bad">Reserved</span>;
-  if (!deployed || availability == null) return <span className="pill">Checking</span>;
+  if (!deployed) return <span className="pill">Preview</span>;
+  if (checking || availability == null) return <span className="pill">Checking</span>;
   if (availability === 1) return <span className="pill good">{paused ? "Paused" : "Available"}</span>;
-  if (availability === 3) return <span className="pill">Active</span>;
+  if (availability === 3) return <span className="pill">Registered</span>;
   if (availability === 4) return <span className="pill warn">Grace</span>;
   if (availability === 5) return <span className="pill warn">Lapsed</span>;
   return <span className="pill bad">Unsupported</span>;
-}
-
-function Explanation({
-  availability,
-  reserved,
-  deployed,
-  seedReason,
-}: {
-  availability: number | null;
-  reserved: boolean;
-  deployed: boolean;
-  seedReason: string | null;
-}) {
-  if (reserved) {
-    return (
-      <div className="stack">
-        <p>
-          This label is reserved and cannot be registered. Public minting has one path, and that path checks the
-          reservation list, so a discount or allowlist cannot bypass it.
-        </p>
-        {seedReason ? <p className="muted">{seedReason}</p> : null}
-        <p className="muted">{reservationDisclosure}</p>
-      </div>
-    );
-  }
-  if (!deployed) {
-    return <p className="muted">The label matches the character rules. The Arc contracts are not on this network yet, so this page will not ask for a payment.</p>;
-  }
-  if (availability === 3) return <p className="muted">This name is active. It resolves only if the owner has set a payment address.</p>;
-  if (availability === 4) {
-    return (
-      <p>
-        Grace period. The name does not resolve. The current registrant can still renew. Anyone can pay the renewal; the
-        owner does not change. After grace, a new registrant can take the label and the old NFT is burned.
-      </p>
-    );
-  }
-  if (availability === 5) {
-    return (
-      <p className="muted">
-        The previous term has lapsed. Registering again burns the old NFT, clears its records, and mints the same token id
-        to the new recipient.
-      </p>
-    );
-  }
-  if (availability === 1) return <p className="muted">Available for a public registration. Payment happens at reveal, not at commit.</p>;
-  return <p className="muted">Checking the registrar.</p>;
 }
 
 function noticeFrom(cause: unknown, fallback: string): { kind: "rejected" | "failed"; detail: string } {

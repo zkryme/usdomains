@@ -4,7 +4,7 @@ import { nameAbi, registrarAbi, resolverAbi, reverseAbi, usdcAbi, parseUsdName }
 import { useMemo, useState } from "react";
 import { isAddress, keccak256, toBytes, zeroAddress, type Address } from "viem";
 import { useAccount, useChainId, usePublicClient, useReadContract, useWriteContract } from "wagmi";
-import { ConfirmAddress } from "@/components/address";
+import { ConfirmAddress, recipientIssue } from "@/components/address";
 import { deploymentFor } from "@/lib/deployment";
 import { arcFees, formatUsdc, formatWhen, txError } from "@/lib/format";
 
@@ -274,6 +274,7 @@ export function ManageFlow({ raw }: { raw: string }) {
           <span>New holder</span>
           <input value={transferTo} onChange={(event) => { setTransferTo(event.target.value.trim()); setTransferOk(false); }} spellCheck={false} />
         </label>
+        {transferTo.trim() && recipientIssue(transferTo) ? <p className="error">{recipientIssue(transferTo)}</p> : null}
         <ConfirmAddress
           title="Full recipient address"
           address={transferTo}
@@ -283,7 +284,7 @@ export function ManageFlow({ raw }: { raw: string }) {
         />
         <button
           className="primary"
-          disabled={!live || !isOwner || !address || !transferOk || !isAddress(transferTo) || busy}
+          disabled={!live || !isOwner || !address || !transferOk || recipientIssue(transferTo) != null || busy}
           onClick={() =>
             void run(async () => {
               if (!address) return;

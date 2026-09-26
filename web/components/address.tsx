@@ -1,6 +1,20 @@
 "use client";
 
-import { isAddress, type Address, type Hex } from "viem";
+import { getAddress, isAddress, type Address, type Hex } from "viem";
+
+const BURN = new Set([
+  "0x0000000000000000000000000000000000000000",
+  "0x000000000000000000000000000000000000dead",
+]);
+
+/** Empty string when the address can receive an NFT. */
+export function recipientIssue(value: string): string | null {
+  const trimmed = value.trim();
+  if (!trimmed) return "Enter an EVM address.";
+  if (!isAddress(trimmed)) return "Enter an EVM address. Names and addresses from other chains are not accepted.";
+  if (BURN.has(getAddress(trimmed).toLowerCase())) return "This is a burn address. It cannot receive the NFT.";
+  return null;
+}
 
 export function FullAddress({ value }: { value: string }) {
   return <code className="full mono">{value}</code>;

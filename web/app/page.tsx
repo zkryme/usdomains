@@ -17,15 +17,12 @@ export default function HomePage() {
           <h2>A name you can own and manage</h2>
           <p>
             Register a .usd name on Arc for 1–10 years. Your name is an NFT that lets you set an Arc payment address,
-            renew, or transfer it. Apps must integrate the US Domains registry to resolve .usd names. None do yet, and a
-            wallet, browser, or ENS will not resolve one on its own.
+            renew, or transfer it. Apps must integrate the US Domains registry to resolve .usd names.
           </p>
-          <Link href="/docs#register">Read the docs</Link>
         </div>
         <figure className="nft-sample">
-          <figcaption className="nft-tag">Example NFT</figcaption>
           <div className="nft-art">
-            <strong>alice.usd</strong>
+            <strong>jeremy.usd</strong>
             <span>US Domains</span>
           </div>
           <dl>
