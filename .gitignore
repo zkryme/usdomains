@@ -10,3 +10,5 @@ sdk/dist/
 sdk/node_modules/
 /lib/
 .DS_Store
+.vercel
+.env*
