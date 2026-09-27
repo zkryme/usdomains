@@ -232,9 +232,9 @@ h1, h2, .docs-body h1, .about-page h1, .checkout-head h1 {
   background: #f4f7fb;
 }
 .summary h3 { margin: 0 0 10px; font-size: 15px; }
-.summary dl { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px 12px; margin: 0; }
-.summary dt { color: var(--muted); }
-.summary dd { margin: 0; font-weight: 600; word-break: break-all; }
+.summary dl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 20px; margin: 0; align-items: baseline; }
+.summary dt { color: var(--muted); font-weight: 500; }
+.summary dd { margin: 0; font-weight: 600; text-align: right; }
 .notice { border-radius: 12px; padding: 12px 14px; border: 1px solid var(--line); line-height: 1.45; }
 .notice.pending { background: #f3f7ff; }
 .notice.success { background: #e8f6ef; }
@@ -273,9 +273,12 @@ button.quiet, a.quiet {
 .checkout { margin-top: 8px; text-align: left; }
 .checkout-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 28px 0 16px; }
 .checkout-head h1 { margin: 0; font-size: clamp(36px, 5vw, 56px); letter-spacing: -0.04em; line-height: 1; font-weight: 400; }
-.checkout-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+.checkout-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; align-items: start; }
 .order { position: sticky; top: 88px; }
-.order h2 { margin: 0 0 14px; font-size: 16px; letter-spacing: -0.03em; }
+.order h2 { margin: 0 0 16px; font-size: 16px; letter-spacing: -0.03em; }
+.order .recipient-line { justify-content: flex-end; flex-wrap: nowrap; }
+.order .recipient-line .mono, .order .copy { white-space: nowrap; }
+.order .copy { flex: none; }
 .label-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
 .label-row a, .rules-link { color: var(--blue-deep); font-weight: 650; font-size: 14px; }
 .recipient-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -443,8 +446,7 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line
   .nft-sample { width: min(100%, 320px); }
   .checkout-grid, .about-places { grid-template-columns: 1fr; }
   .order { position: static; }
-  .summary dl { grid-template-columns: 1fr; gap: 2px 0; }
-  .summary div, .summary dd { margin-bottom: 8px; }
+  .summary dl { gap: 12px 16px; }
   .nav { width: 100%; justify-content: flex-start; gap: 16px; }
   .docs { grid-template-columns: 1fr; gap: 18px; }
   .docs-nav { position: static; flex-direction: row; flex-wrap: wrap; gap: 4px 0; }
