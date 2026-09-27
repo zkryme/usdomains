@@ -42,7 +42,9 @@ contract SeedTest is Test {
             address(this),
             address(this),
             address(this),
-            USDTerms.DEFAULT_GRACE
+            address(0xEFEF),
+            USDTerms.DEFAULT_GRACE,
+            true
         );
         nameNft.wire(address(registrar), address(resolver), address(reverseRegistrar), address(metadata));
         resolver.setRegistrar(address(registrar));
@@ -81,6 +83,7 @@ contract SeedTest is Test {
     }
 
     function test_mainnetScriptCannotDeploy() public {
+        vm.setEnv("USD_CONFIRM_MAINNET", "");
         DeployMainnet mainnet = new DeployMainnet();
         vm.expectRevert(DeployMainnet.ConfirmationRequired.selector);
         mainnet.run();

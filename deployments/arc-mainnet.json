@@ -1,14 +1,15 @@
 {
   "chainId": 5042,
   "deployed": true,
-  "registrationPaused": true,
-  "publicMintOpen": false,
-  "startBlock": 23094345,
+  "registrationPaused": false,
+  "publicMintOpen": true,
+  "startBlock": 23097952,
   "usdc": "0x3600000000000000000000000000000000000000",
-  "name": "0xBE79b0b2E87B51E2eDf550fD28f7488Fd036fFC9",
-  "resolver": "0x3f56A1ae12e72606402aCfE571A018EA1867CA52",
-  "reverse": "0x79A50796C32f8Cf3aCD7Ba069f57a4B14c0ac84C",
-  "reserved": "0x6291362f8FDd50D075C06E5d2F614Bb28B1A6660",
-  "metadata": "0xfD95A2C98767c107549Db3d8c35b6FBa7Ebe5590",
-  "registrar": "0x1D3d0386eb510DaaE4963FBe535F47C30C24A3f2"
+  "name": "0xb0D3A109190A93446742Ab57FeFE67F5B7Af3a5d",
+  "resolver": "0x7df67e6F15716E4182627b1855BC1e2864CCDB3b",
+  "reverse": "0x415D2Eae70A90aF950369Ac2dEe9216b328DE011",
+  "reserved": "0x7fb8eD803899D01FA977D4df1bB70D6a9a727158",
+  "metadata": "0x7fa4052E5D778fdaf9f380b939b06C0c77120b1C",
+  "registrar": "0x1337790E160bdf7cc7560aC545223E5b51371317",
+  "feeExempt": "0x931C72148f15F1345B74ae2D7E1D136b91f2cDDb"
 }

@@ -78,6 +78,12 @@ export function RegisterFlow({ raw }: { raw: string }) {
     args: [label, years],
     query: { enabled: live && years >= 1 && years <= 10 },
   });
+  const exempt = useReadContract({
+    address: registrar,
+    abi: registrarAbi,
+    functionName: "feeExempt",
+    query: { enabled: live },
+  });
   const prices = useReadContract({
     address: registrar,
     abi: registrarAbi,
@@ -158,7 +164,6 @@ export function RegisterFlow({ raw }: { raw: string }) {
   const seedReason = reservedReason(parsed.label);
   const reserved = Boolean(inspect.data?.[2]) || (!deployment.deployed && seedReason != null);
   const paused = Boolean(inspect.data?.[7]);
-  const amount = quote.data ?? 0n;
   const minWait = Number(minAge.data ?? 60n);
   const maxWait = Number(maxAge.data ?? 86400n);
   const committed = Number(committedAt.data ?? 0n);
@@ -170,8 +175,10 @@ export function RegisterFlow({ raw }: { raw: string }) {
   const perYear = prices.data?.[0] ?? annualUnits(label.length);
   const estimated = perYear * BigInt(years);
   const total = quote.data ?? estimated;
+  const waived = payer != null && exempt.data != null && sameAddress(payer, exempt.data);
+  const due = waived ? 0n : total;
   const quoteLive = live && quote.data != null;
-  const shortBalance = live && canRegister && balance.data != null && balance.data < total;
+  const shortBalance = live && canRegister && !waived && balance.data != null && balance.data < due;
   const issue = recipient.trim() ? recipientIssue(recipient) : isConnected ? "Enter an EVM address." : null;
   const customRecipient = Boolean(payer) && recipient.trim().length > 0 && payer != null && !sameAddress(recipient, payer);
   const recipientReady = issue == null && (!customRecipient || recipientConfirmed);
@@ -231,19 +238,24 @@ export function RegisterFlow({ raw }: { raw: string }) {
         functionName: "allowance",
         args: [payer, registrar],
       });
-      if (allowance < amount) {
+      if (!waived && allowance < due) {
         setNotice({ kind: "pending", detail: "Approving the exact USDC amount. The name is not registered yet." });
         const approval = await writeContractAsync({
           address: deployment.usdc,
           abi: usdcAbi,
           functionName: "approve",
-          args: [registrar, amount],
+          args: [registrar, due],
           chainId: deployment.chainId,
           ...fees,
         });
         await publicClient.waitForTransactionReceipt({ hash: approval });
       }
-      setNotice({ kind: "pending", detail: "Confirm the payment in your wallet. The name is not registered until Arc confirms it." });
+      setNotice({
+        kind: "pending",
+        detail: waived
+          ? "Confirm the registration in your wallet. No USDC is pulled. The name is not registered until Arc confirms it."
+          : "Confirm the payment in your wallet. The name is not registered until Arc confirms it.",
+      });
       const hash = await writeContractAsync({
         address: registrar,
         abi: registrarAbi,
@@ -252,11 +264,21 @@ export function RegisterFlow({ raw }: { raw: string }) {
         chainId: deployment.chainId,
         ...fees,
       });
-      setNotice({ kind: "pending", detail: "Payment sent. Waiting for Arc to confirm it. The name is not registered yet." });
+      setNotice({
+        kind: "pending",
+        detail: waived
+          ? "Registration sent. Waiting for Arc to confirm it. The name is not registered yet."
+          : "Payment sent. Waiting for Arc to confirm it. The name is not registered yet.",
+      });
       await publicClient.waitForTransactionReceipt({ hash });
       window.localStorage.removeItem(draftKey(deployment.chainId, label, payer));
       setDraft(null);
-      setNotice({ kind: "success", detail: "Registered. Arc confirmed the payment, and the NFT is the current control of this name." });
+      setNotice({
+        kind: "success",
+        detail: waived
+          ? "Registered. No USDC was pulled, and the NFT is the current control of this name."
+          : "Registered. Arc confirmed the payment, and the NFT is the current control of this name.",
+      });
     } catch (cause) {
       const base = noticeFrom(cause, "The payment did not complete. The name was not registered.");
       setNotice(
@@ -407,11 +429,15 @@ export function RegisterFlow({ raw }: { raw: string }) {
           {draft && !wrongNetwork ? (
             <div className="stack">
               <ConfirmAddress
-                title="USDC is pulled to this registrar"
+                title={waived ? "No USDC is pulled for this wallet" : "USDC is pulled to this registrar"}
                 address={registrar}
                 checked={payConfirmed}
                 onChecked={setPayConfirmed}
-                note={`I approve paying exactly ${formatUsdc(amount)} USDC to register ${parsed.name} for ${draft.recipient}.`}
+                note={
+                  waived
+                    ? `No USDC is pulled to register ${parsed.name} for ${draft.recipient}.`
+                    : `I approve paying exactly ${formatUsdc(due)} USDC to register ${parsed.name} for ${draft.recipient}.`
+                }
               />
               <button className="primary" type="button" disabled={busy || !ready || !payConfirmed || writesDisabled || shortBalance} onClick={() => void reveal()}>
                 Register
@@ -438,7 +464,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
             <dt>Price per year</dt>
             <dd>{formatUsdc(perYear)} USDC</dd>
             <dt>{quoteLive ? "Total" : "Estimated total"}</dt>
-            <dd>{formatUsdc(total)} USDC</dd>
+            <dd>{waived ? "Free" : `${formatUsdc(due)} USDC`}</dd>
             <dt>NFT recipient</dt>
             <dd className="recipient-line">
               <span className="mono">{shortAddress(recipient)}</span>

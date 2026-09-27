@@ -21,7 +21,8 @@ import {USDTerms} from "../src/USDTerms.sol";
 ///      USD_TREASURY
 ///      USD_TREASURY_CONTROLLER
 ///      Use a multisig for the admin and treasury controller.
-///      Registration stays paused unless USD_OPEN_MINT=YES.
+///      Registration starts paused unless USD_OPEN_MINT=YES.
+///      USD_ADMIN registers without a USDC pull. Renewals still pay.
 ///      Gas is native USDC. maxFeePerGas must be at least 20 gwei.
 contract DeployMainnet is Script {
     error ConfirmationRequired();
@@ -66,7 +67,9 @@ contract DeployMainnet is Script {
             admin,
             treasury,
             controller,
-            USDTerms.DEFAULT_GRACE
+            admin,
+            USDTerms.DEFAULT_GRACE,
+            !openMint
         );
 
         nameNft.wire(address(registrar), address(resolver), address(reverseRegistrar), address(metadata));
@@ -89,7 +92,6 @@ contract DeployMainnet is Script {
         }
 
         registrar.closeSeed();
-        if (openMint) registrar.setRegistrationPaused(false);
         vm.stopBroadcast();
 
         console2.log("name", address(nameNft));
@@ -132,6 +134,9 @@ contract DeployMainnet is Script {
             '",\n',
             '  "registrar": "',
             vm.toString(address(registrar)),
+            '",\n',
+            '  "feeExempt": "',
+            vm.toString(admin),
             '"\n}\n'
         );
         vm.writeFile("deployments/arc-mainnet.json", output);

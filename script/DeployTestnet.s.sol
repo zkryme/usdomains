@@ -59,7 +59,9 @@ contract DeployTestnet is Script {
             admin,
             treasury,
             controller,
-            USDTerms.DEFAULT_GRACE
+            admin,
+            USDTerms.DEFAULT_GRACE,
+            true
         );
 
         nameNft.wire(address(registrar), address(resolver), address(reverseRegistrar), address(metadata));

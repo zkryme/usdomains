@@ -3,6 +3,7 @@ import { parseAbi } from "viem";
 export const registrarAbi = parseAbi([
   "function inspect(string label) view returns (uint8 availability, uint8 labelCode, bool reserved, address owner, uint64 expiry, uint64 graceEnds, uint256 annualPrice, bool registrationPaused)",
   "function quote(string label, uint8 years_) view returns (uint256)",
+  "function feeExempt() view returns (address)",
   "function annualPrice(uint256 length) view returns (uint256)",
   "function commitmentHash(string label, address recipient, uint8 years_, address payer, bytes32 secret) view returns (bytes32)",
   "function commitments(bytes32 commitment) view returns (uint64)",

@@ -37,6 +37,12 @@ export function SearchForm() {
     args: [label, 1],
     query: { enabled: live },
   });
+  const exempt = useReadContract({
+    address: (deployment.registrar ?? zeroAddress) as Address,
+    abi: registrarAbi,
+    functionName: "feeExempt",
+    query: { enabled: live },
+  });
   const balance = useReadContract({
     address: deployment.usdc,
     abi: usdcAbi,
@@ -47,6 +53,7 @@ export function SearchForm() {
 
   const listed = label ? annualUnits(label.length) : 0n;
   const perYear = quote.data ?? listed;
+  const waived = Boolean(address && exempt.data && address.toLowerCase() === exempt.data.toLowerCase());
   const availability = inspect.data ? Number(inspect.data[0]) : null;
   const chainReserved = Boolean(inspect.data?.[2]);
   const seedReserved = label ? reservedReason(label) != null : false;
@@ -54,7 +61,7 @@ export function SearchForm() {
   const checking = live && (inspect.isLoading || inspect.isFetching);
   const taken = availability === 3 || availability === 4;
   const registrable = deployment.deployed && (availability === 1 || availability === 5) && !reserved;
-  const shortBalance = balance.data != null && balance.data < perYear;
+  const shortBalance = !waived && balance.data != null && balance.data < perYear;
 
   return (
     <form
@@ -94,7 +101,7 @@ export function SearchForm() {
                   deployed={deployment.deployed}
                   lapsed={availability === 5}
                 />
-                <span>{formatUsdc(perYear)} USDC/year</span>
+                <span>{waived ? "Free for this wallet" : `${formatUsdc(perYear)} USDC/year`}</span>
               </p>
               <PreviewNote
                 checking={checking}

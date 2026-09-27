@@ -687,6 +687,44 @@ contract USDRegistrarTest is USDTestBase {
         return uint256(keccak256(bytes(label)));
     }
 
+    function test_feeExemptRegistersWithoutPaymentAndRenewalStillPays() public {
+        assertEq(registrar.feeExempt(), exempt);
+        _unpause();
+        assertEq(usdc.balanceOf(exempt), 0);
+        uint256 quoted = registrar.quote("exempt", 1);
+        assertEq(quoted, 10 * USDTerms.USDC_UNIT);
+
+        _register(exempt, exempt, "exempt", 1);
+
+        assertEq(usdc.balanceOf(exempt), 0);
+        assertEq(usdc.balanceOf(address(registrar)), 0);
+        assertEq(registrar.accountedBalance(), 0);
+        assertEq(nameNft.ownerOf(nameNftToken("exempt")), exempt);
+
+        _fund(exempt, quoted);
+        uint256 before = usdc.balanceOf(exempt);
+        vm.prank(exempt);
+        registrar.renew("exempt", 1);
+        assertEq(usdc.balanceOf(exempt), before - quoted);
+        assertEq(registrar.accountedBalance(), quoted);
+    }
+
+    function test_feeExemptStillCannotRegisterReserved() public {
+        string[] memory labels = new string[](1);
+        labels[0] = "circle";
+        registrar.reserve(labels);
+        _unpause();
+
+        bytes32 secret = keccak256("exempt-reserved");
+        bytes32 commitment = registrar.commitmentHash("circle", exempt, 1, exempt, secret);
+        vm.prank(exempt);
+        registrar.commit(commitment);
+        vm.warp(block.timestamp + 61);
+        vm.prank(exempt);
+        vm.expectRevert(USDRegistrar.LabelReserved.selector);
+        registrar.reveal("circle", exempt, 1, secret);
+    }
+
     function _letters(uint256 length) internal pure returns (string memory) {
         bytes memory data = new bytes(length);
         for (uint256 i; i < length; ++i) {

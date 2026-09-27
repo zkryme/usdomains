@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import mainnet from "../../../deployments/arc-mainnet.json";
 
 export const metadata: Metadata = {
   title: "Docs",
@@ -47,6 +48,7 @@ export default function DocsPage() {
         <a href="#expiry">Expiry</a>
         <a href="#nft">The NFT</a>
         <a href="#network">Network</a>
+        <a href="#contracts">Contracts</a>
         <a href="#resolve">Resolve</a>
         <a href="#status">Status values</a>
         <a href="#reads">Contract reads</a>
@@ -136,9 +138,48 @@ export default function DocsPage() {
         </table>
         <p>
           Do not put a name payment or a registration fee in <code>msg.value</code>. The two units differ by{" "}
-          <code>1e12</code>. Contract addresses are in <code>deployments/arc-mainnet.json</code>. Until{" "}
-          <code>deployed</code> is true, there is no registrar to call.
+          <code>1e12</code>.
         </p>
+
+        <h2 id="contracts">Contracts</h2>
+        <p>
+          These are the Arc mainnet contracts. Registration fees sit in the registrar until{" "}
+          <code>{mainnet.feeExempt}</code> withdraws them to that same address. That address can also register a name
+          without a USDC payment. The waiver does not skip reservations, the commit, or a pause, and renewals still
+          cost the public price.
+        </p>
+        <table>
+          <tbody>
+            <tr>
+              <th>Registrar</th>
+              <td><code>{mainnet.registrar}</code></td>
+            </tr>
+            <tr>
+              <th>Name NFT</th>
+              <td><code>{mainnet.name}</code></td>
+            </tr>
+            <tr>
+              <th>Resolver</th>
+              <td><code>{mainnet.resolver}</code></td>
+            </tr>
+            <tr>
+              <th>Reverse</th>
+              <td><code>{mainnet.reverse}</code></td>
+            </tr>
+            <tr>
+              <th>Reserved names</th>
+              <td><code>{mainnet.reserved}</code></td>
+            </tr>
+            <tr>
+              <th>Metadata</th>
+              <td><code>{mainnet.metadata}</code></td>
+            </tr>
+            <tr>
+              <th>USDC</th>
+              <td><code>{mainnet.usdc}</code></td>
+            </tr>
+          </tbody>
+        </table>
 
         <h2 id="resolve">Resolve</h2>
         <p>This is the send path. Fill <code>contracts</code> from the deployment file after it is deployed.</p>

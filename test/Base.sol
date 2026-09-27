@@ -27,6 +27,7 @@ abstract contract USDTestBase is Test {
     address internal alice = makeAddr("alice");
     address internal bob = makeAddr("bob");
     address internal carol = makeAddr("carol");
+    address internal exempt = makeAddr("exempt");
 
     function setUp() public virtual {
         _deploy(address(new MockUSDC()));
@@ -47,7 +48,9 @@ abstract contract USDTestBase is Test {
             address(this),
             treasury,
             address(this),
-            USDTerms.DEFAULT_GRACE
+            exempt,
+            USDTerms.DEFAULT_GRACE,
+            true
         );
         nameNft.wire(address(registrar), address(resolver), address(reverseRegistrar), address(metadata));
         resolver.setRegistrar(address(registrar));

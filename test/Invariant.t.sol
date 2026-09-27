@@ -38,7 +38,9 @@ contract USDHandler is Test {
             address(this),
             address(this),
             address(this),
-            USDTerms.DEFAULT_GRACE
+            address(0xEFEF),
+            USDTerms.DEFAULT_GRACE,
+            true
         );
         nameNft.wire(address(registrar), address(resolver), address(reverseRegistrar), address(metadata));
         resolver.setRegistrar(address(registrar));

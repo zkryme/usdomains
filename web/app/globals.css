@@ -295,7 +295,8 @@ button.quiet, a.quiet {
 .about-places { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 40px; max-width: 520px; }
 .about-places div { border: 1px dashed #d5deea; border-radius: 16px; padding: 16px 18px; background: #f4f7fb; }
 .about-places strong { display: block; margin-bottom: 4px; }
-.about-places span { color: var(--muted); font-size: 14px; }
+.about-places span, .about-places a { color: var(--muted); font-size: 14px; }
+.about-places a { color: var(--blue-deep); font-weight: 650; }
 .card {
   background: var(--card);
   border: 1px solid var(--line);

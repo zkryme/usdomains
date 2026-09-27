@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { mainnetDeployment } from "@/lib/deployment";
+
+const openSea = mainnetDeployment.name ? `https://opensea.io/assets/arc/${mainnetDeployment.name}` : null;
 
 export default function AboutPage() {
   return (
@@ -17,7 +20,7 @@ export default function AboutPage() {
         </div>
         <div>
           <strong>OpenSea</strong>
-          <span>Link coming soon</span>
+          {openSea ? <a href={openSea}>View the name NFTs</a> : <span>Link coming soon</span>}
         </div>
       </div>
     </main>

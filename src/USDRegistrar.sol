@@ -35,8 +35,9 @@ import {RejectNativeValue} from "./RejectNativeValue.sol";
 ///      chain id, and this registrar. Reveal must be sent by the bound payer. A copied reveal cannot
 ///      redirect the name.
 ///
-///      There is no allowlist, discount, or free mint. `reveal` is the only registration path, and
-///      it checks reservations before minting.
+///      `feeExempt` may register without a USDC pull. That waiver does not skip pause, commitments,
+///      label checks, or reservations, and it does not apply to renewal. Everyone else pays the
+///      public price. `reveal` is the only registration path, and it checks reservations before minting.
 ///
 ///      Contracts are not upgradeable. The admin can pause new registrations, schedule price and
 ///      grace changes, reserve unregistered labels, and change the treasury address. The admin
@@ -162,6 +163,10 @@ contract USDRegistrar is AccessControl, ReentrancyGuard, RejectNativeValue {
     mapping(uint256 tokenId => uint64 expiry) public expiries;
     mapping(uint8 tier => PriceSchedule schedule) private _prices;
     GraceSchedule private _grace;
+    /// @notice This address pays no USDC on `reveal`. Renewals still pay.
+    address public immutable feeExempt;
+    /// @dev Applied once, inside `closeSeed`, so seeding still happens while registration is paused.
+    bool private immutable openAfterSeed;
 
     constructor(
         IUSDName name_,
@@ -171,12 +176,14 @@ contract USDRegistrar is AccessControl, ReentrancyGuard, RejectNativeValue {
         address admin_,
         address treasury_,
         address treasuryController_,
-        uint64 gracePeriod_
+        address feeExempt_,
+        uint64 gracePeriod_,
+        bool registrationStartsPaused_
     ) {
         if (
             address(name_) == address(0) || address(resolver_) == address(0) || address(reserved_) == address(0)
                 || address(usdc_) == address(0) || admin_ == address(0) || treasury_ == address(0)
-                || treasuryController_ == address(0)
+                || treasuryController_ == address(0) || feeExempt_ == address(0)
         ) revert ZeroAddress();
         if (gracePeriod_ < MIN_GRACE || gracePeriod_ > MAX_GRACE) revert GraceOutOfBounds();
 
@@ -188,6 +195,8 @@ contract USDRegistrar is AccessControl, ReentrancyGuard, RejectNativeValue {
         reservedNames = reserved_;
         usdc = usdc_;
         treasury = treasury_;
+        feeExempt = feeExempt_;
+        openAfterSeed = !registrationStartsPaused_;
         seedOperator = msg.sender;
         _grace.current = gracePeriod_;
 
@@ -353,7 +362,7 @@ contract USDRegistrar is AccessControl, ReentrancyGuard, RejectNativeValue {
 
         uint64 newExpiry = uint64(block.timestamp + uint256(years_) * YEAR);
         expiries[tokenId] = newExpiry;
-        uint256 cost = _charge(bytes(label).length, years_);
+        uint256 cost = msg.sender == feeExempt ? 0 : _charge(bytes(label).length, years_);
         nameContract.mint(recipient, tokenId, label);
 
         emit NameRegistered(tokenId, recipient, msg.sender, label, newExpiry, years_, cost);
@@ -412,6 +421,10 @@ contract USDRegistrar is AccessControl, ReentrancyGuard, RejectNativeValue {
         seedClosed = true;
         emit SeedOperatorClosed(seedOperator);
         seedOperator = address(0);
+        if (openAfterSeed) {
+            registrationPaused = false;
+            emit RegistrationPauseSet(false);
+        }
     }
 
     /// @notice Reverts unless every supplied label is reserved. Used by deployment to confirm the seed.
