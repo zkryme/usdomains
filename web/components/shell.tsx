@@ -13,8 +13,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="sky">
-      <div className="shell">
-        <header className="top">
+      <header className="top">
+        <div className="top-inner">
           <Link href="/" className="brand">
             <span className="mark">U</span>
             <span className="word">
@@ -28,7 +28,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
             {isConnected ? <Link href="/portfolio">My names</Link> : null}
             <ConnectButton showBalance={false} />
           </nav>
-        </header>
+        </div>
+      </header>
+      <div className="shell">
         {wrongNetwork ? (
           <div className="banner">
             <strong>Switch to Arc.</strong> .usd names are registered on Arc mainnet, chain id 5042.

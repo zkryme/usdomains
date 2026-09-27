@@ -31,31 +31,37 @@ code, .mono { font-family: var(--font-mono), ui-monospace, monospace; }
   position: sticky;
   top: 0;
   z-index: 30;
+  background: rgba(244, 239, 232, 0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.top-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 14px 24px;
   display: flex;
   justify-content: space-between;
   gap: 16px;
   align-items: center;
-  margin-bottom: 8px;
-  padding: 18px 0 14px;
-  background: #f4efe8;
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .mark {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   display: grid;
   place-items: center;
-  background: var(--blue);
-  color: white;
-  font-weight: 700;
+  background: var(--ink);
+  color: #f4efe8;
+  font-weight: 650;
+  font-size: 14px;
   letter-spacing: -0.04em;
 }
 .word { display: flex; flex-direction: column; line-height: 1.15; }
 .word strong { font-size: 16px; font-weight: 650; letter-spacing: -0.03em; }
 .word span { color: var(--muted); font-size: 12px; font-weight: 450; }
 .nav { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
-.nav a { text-decoration: none; color: var(--ink); font-size: 15px; font-weight: 550; }
+.nav a { text-decoration: none; color: var(--ink); font-size: 14px; font-weight: 550; letter-spacing: -0.011em; }
 .nav a:hover { color: var(--blue-deep); }
 
 .banner {
@@ -74,12 +80,11 @@ code, .mono { font-family: var(--font-mono), ui-monospace, monospace; }
 .hero {
   text-align: center;
   margin-top: 28px;
-  padding: 48px 22px 28px;
-  border: 1px solid #e4dcd2;
-  border-radius: 28px;
-  background-color: #fbf7f2;
-  background-image: radial-gradient(rgba(28, 25, 22, 0.045) 0.7px, transparent 0.7px);
-  background-size: 8px 8px;
+  padding: 56px 32px 32px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 1px 2px rgba(28, 25, 22, 0.04);
 }
 .hero h1 {
   font-family: var(--font-sans), "Segoe UI", sans-serif;
@@ -102,10 +107,15 @@ code, .mono { font-family: var(--font-mono), ui-monospace, monospace; }
   display: flex;
   align-items: center;
   width: 100%;
-  background: white;
-  border: 1px solid #d9d1c7;
-  border-radius: 16px;
-  padding: 6px 16px;
+  background: #fff;
+  border: 1px solid #d5ccc2;
+  border-radius: 12px;
+  padding: 4px 16px;
+  box-shadow: 0 1px 2px rgba(28, 25, 22, 0.04);
+}
+.searchbar:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(61, 125, 255, 0.16);
 }
 .searchbar input {
   flex: 1;
@@ -402,8 +412,9 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line
 .docs pre code { background: transparent; color: inherit; padding: 0; }
 
 @media (max-width: 800px) {
+  .shell { padding: 0 16px 48px; }
   .grid, .prices { grid-template-columns: 1fr; }
-  .top { align-items: flex-start; flex-direction: column; }
+  .top-inner { align-items: flex-start; flex-direction: column; padding: 14px 16px; }
   .hero { padding: 32px 16px 22px; }
   .hero h1 { font-size: 36px; }
   .searchbar { padding: 4px 14px; }
@@ -415,7 +426,6 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line
   .order { position: static; }
   .summary dl { grid-template-columns: 1fr; gap: 2px 0; }
   .summary div, .summary dd { margin-bottom: 8px; }
-  .top { align-items: flex-start; }
   .nav { width: 100%; justify-content: flex-start; gap: 16px; }
   .docs { grid-template-columns: 1fr; gap: 18px; }
   .docs-nav { position: static; flex-direction: row; flex-wrap: wrap; gap: 4px 0; }
