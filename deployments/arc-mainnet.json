@@ -1,14 +1,14 @@
 {
   "chainId": 5042,
-  "deployed": false,
+  "deployed": true,
   "registrationPaused": true,
   "publicMintOpen": false,
-  "startBlock": null,
+  "startBlock": 23094345,
   "usdc": "0x3600000000000000000000000000000000000000",
-  "name": null,
-  "resolver": null,
-  "reverse": null,
-  "reserved": null,
-  "metadata": null,
-  "registrar": null
+  "name": "0xBE79b0b2E87B51E2eDf550fD28f7488Fd036fFC9",
+  "resolver": "0x3f56A1ae12e72606402aCfE571A018EA1867CA52",
+  "reverse": "0x79A50796C32f8Cf3aCD7Ba069f57a4B14c0ac84C",
+  "reserved": "0x6291362f8FDd50D075C06E5d2F614Bb28B1A6660",
+  "metadata": "0xfD95A2C98767c107549Db3d8c35b6FBa7Ebe5590",
+  "registrar": "0x1D3d0386eb510DaaE4963FBe535F47C30C24A3f2"
 }
