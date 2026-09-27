@@ -22,7 +22,6 @@ export default function HomePage() {
           <Link href="/docs">How .usd works →</Link>
         </div>
         <figure className="nft-sample">
-          <figcaption className="nft-tag">Example name NFT</figcaption>
           <div className="nft-art">
             <strong>jeremy.usd</strong>
             <span>US Domains</span>
@@ -31,7 +30,6 @@ export default function HomePage() {
             <dt>Arc payment address</dt>
             <dd className="mono">0xA11CE000…0000A11C</dd>
           </dl>
-          <p className="nft-note">Illustration only.</p>
         </figure>
       </section>
     </main>
