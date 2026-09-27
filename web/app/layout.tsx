@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Newsreader, Outfit } from "next/font/google";
+import { DM_Sans, IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Shell } from "@/components/shell";
 
-const sans = Outfit({ subsets: ["latin"], variable: "--font-sans" });
-const serif = Newsreader({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-serif" });
+const sans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
+const display = Space_Grotesk({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-display" });
 const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${sans.variable} ${serif.variable} ${mono.variable} ${sans.className}`}>
+      <body className={`${sans.variable} ${display.variable} ${mono.variable} ${sans.className}`}>
         <Providers>
           <Shell>{children}</Shell>
         </Providers>
