@@ -269,6 +269,10 @@ button.quiet, a.quiet {
 .order .recipient-line { justify-content: flex-end; flex-wrap: nowrap; }
 .order .recipient-line .mono, .order .copy { white-space: nowrap; }
 .order .copy { flex: none; }
+.withdraw-card { max-width: 640px; }
+.withdraw-facts { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px 16px; margin: 0; }
+.withdraw-facts dt { color: var(--muted); }
+.withdraw-facts dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
 .label-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
 .label-row a, .rules-link { color: var(--blue-deep); font-weight: 650; font-size: 14px; }
 .recipient-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
