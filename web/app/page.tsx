@@ -6,7 +6,7 @@ export default function HomePage() {
     <main>
       <section className="hero">
         <h1>Find a .usd name</h1>
-        <p className="lede">Register it on Arc and point it at an address. You pay the yearly price in USDC.</p>
+        <p className="lede">Register it on Arc and point it at an address.</p>
         <SearchForm />
         <p className="price-strip">
           3 characters: 30 USDC/year · 4 characters: 20 USDC/year · 5–32 characters: 10 USDC/year
