@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { bytesToHex, getAddress, isAddress, zeroAddress, type Address, type Hex } from "viem";
 import { useAccount, useChainId, usePublicClient, useReadContract, useSwitchChain, useWriteContract } from "wagmi";
 import { ConfirmAddress, recipientIssue } from "@/components/address";
+import { TweetName } from "@/components/tweet-name";
 import { deploymentFor } from "@/lib/deployment";
 import { arcFees, formatUsdc, formatWhen, txError, txKind } from "@/lib/format";
 import { annualUnits } from "@/lib/pricing";
@@ -59,6 +60,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
   const [notice, setNotice] = useState<Notice>(null);
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [mintedLabel, setMintedLabel] = useState<string | null>(null);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
 
   const publicClient = usePublicClient({ chainId: deployment.chainId });
@@ -273,6 +275,7 @@ export function RegisterFlow({ raw }: { raw: string }) {
       await publicClient.waitForTransactionReceipt({ hash });
       window.localStorage.removeItem(draftKey(deployment.chainId, label, payer));
       setDraft(null);
+      setMintedLabel(label);
       setNotice({
         kind: "success",
         detail: waived
@@ -445,7 +448,17 @@ export function RegisterFlow({ raw }: { raw: string }) {
             </div>
           ) : null}
 
-          {notice ? (
+          {mintedLabel ? (
+            <div className="minted">
+              <p className="minted-name">{mintedLabel}.usd</p>
+              {notice ? (
+                <p className={`notice ${notice.kind}`} role="status">
+                  {notice.detail}
+                </p>
+              ) : null}
+              <TweetName label={mintedLabel} />
+            </div>
+          ) : notice ? (
             <p className={`notice ${notice.kind}`} role="status">
               {notice.detail}
             </p>

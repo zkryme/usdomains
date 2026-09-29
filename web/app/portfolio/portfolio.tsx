@@ -3,7 +3,7 @@
 import { nameAbi, registrarAbi, reverseAbi } from "@usd-names/sdk";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { parseAbiItem } from "viem";
+import { parseAbiItem, type PublicClient } from "viem";
 import { useAccount, useChainId, usePublicClient } from "wagmi";
 import { deploymentFor } from "@/lib/deployment";
 import { formatWhen } from "@/lib/format";
@@ -16,6 +16,35 @@ type Holding = {
 };
 
 const transferEvent = parseAbiItem("event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)");
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isLimited(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  return /rate limit|exceeds defined limit|429|too many requests/i.test(message);
+}
+
+async function readLogs(chain: PublicClient, name: `0x${string}`, wallet: `0x${string}`, from: bigint, to: bigint) {
+  let wait = 1000;
+  for (let attempt = 0; attempt < 6; attempt++) {
+    try {
+      return await chain.getLogs({
+        address: name,
+        event: transferEvent,
+        args: { to: wallet },
+        fromBlock: from,
+        toBlock: to,
+      });
+    } catch (error) {
+      if (!isLimited(error) || attempt === 5) throw error;
+      await sleep(wait);
+      wait *= 2;
+    }
+  }
+  return [];
+}
 
 export function Portfolio() {
   const chainId = useChainId();
@@ -45,19 +74,14 @@ export function Portfolio() {
       try {
         const latest = await chain.getBlockNumber();
         const ids = new Set<bigint>();
-        const page = 9000n;
+        const page = 2000n;
         for (let from = startBlock; from <= latest; from += page) {
           const to = from + page - 1n > latest ? latest : from + page - 1n;
-          const logs = await chain.getLogs({
-            address: name,
-            event: transferEvent,
-            args: { to: wallet },
-            fromBlock: from,
-            toBlock: to,
-          });
+          const logs = await readLogs(chain, name, wallet, from, to);
           for (const log of logs) {
             if (log.args.tokenId != null) ids.add(log.args.tokenId);
           }
+          if (to < latest) await sleep(400);
         }
 
         const next: Holding[] = [];
@@ -87,7 +111,14 @@ export function Portfolio() {
           setPrimary(lookedUp[1] ? `${lookedUp[0]}.usd` : "none");
         }
       } catch (cause) {
-        if (!cancelled) setError(cause instanceof Error ? cause.message : "Could not read the portfolio.");
+        if (!cancelled) {
+          const message = cause instanceof Error ? cause.message : "";
+          setError(
+            /rate limit|exceeds defined limit|429/i.test(message)
+              ? "Arc is limiting name lookups right now. Wait a moment, then reload this page."
+              : message || "Could not read the portfolio.",
+          );
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
