@@ -3,7 +3,6 @@
 import { nameAbi, registrarAbi, reverseAbi } from "@usd-names/sdk";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { parseAbiItem, type PublicClient } from "viem";
 import { useAccount, useChainId, usePublicClient } from "wagmi";
 import { deploymentFor } from "@/lib/deployment";
 import { formatWhen } from "@/lib/format";
@@ -15,35 +14,33 @@ type Holding = {
   expiry: bigint;
 };
 
-const transferEvent = parseAbiItem("event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)");
+type ExplorerPage = {
+  items?: Array<{ id?: string; token?: { address_hash?: string } }>;
+  next_page_params?: Record<string, unknown> | null;
+};
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function isLimited(error: unknown) {
-  const message = error instanceof Error ? error.message : String(error);
-  return /rate limit|exceeds defined limit|429|too many requests/i.test(message);
-}
-
-async function readLogs(chain: PublicClient, name: `0x${string}`, wallet: `0x${string}`, from: bigint, to: bigint) {
-  let wait = 1000;
-  for (let attempt = 0; attempt < 6; attempt++) {
-    try {
-      return await chain.getLogs({
-        address: name,
-        event: transferEvent,
-        args: { to: wallet },
-        fromBlock: from,
-        toBlock: to,
-      });
-    } catch (error) {
-      if (!isLimited(error) || attempt === 5) throw error;
-      await sleep(wait);
-      wait *= 2;
+async function indexedNameIds(wallet: string, name: string) {
+  const ids = new Set<bigint>();
+  let query = "type=ERC-721";
+  for (let page = 0; page < 8; page++) {
+    const response = await fetch(`https://explorer.arc.io/api/v2/addresses/${wallet}/nft?${query}`);
+    if (!response.ok) throw new Error("index");
+    const body = (await response.json()) as ExplorerPage;
+    for (const item of body.items ?? []) {
+      if (!item.id || item.token?.address_hash?.toLowerCase() !== name.toLowerCase()) continue;
+      ids.add(BigInt(item.id));
     }
+    const next = body.next_page_params;
+    if (!next) break;
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(next)) {
+      if (value == null || typeof value === "object") continue;
+      params.set(key, String(value));
+    }
+    if (!params.has("type")) params.set("type", "ERC-721");
+    query = params.toString();
   }
-  return [];
+  return ids;
 }
 
 export function Portfolio() {
@@ -57,7 +54,7 @@ export function Portfolio() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!address || !client || !deployment.deployed || !deployment.name || !deployment.registrar || !deployment.reverse || deployment.startBlock == null) {
+    if (!address || !client || !deployment.deployed || !deployment.name || !deployment.registrar || !deployment.reverse) {
       return;
     }
     const chain = client;
@@ -65,25 +62,13 @@ export function Portfolio() {
     const name = deployment.name;
     const registrar = deployment.registrar;
     const reverse = deployment.reverse;
-    const startBlock = deployment.startBlock;
     let cancelled = false;
 
     async function load() {
       setLoading(true);
       setError("");
       try {
-        const latest = await chain.getBlockNumber();
-        const ids = new Set<bigint>();
-        const page = 2000n;
-        for (let from = startBlock; from <= latest; from += page) {
-          const to = from + page - 1n > latest ? latest : from + page - 1n;
-          const logs = await readLogs(chain, name, wallet, from, to);
-          for (const log of logs) {
-            if (log.args.tokenId != null) ids.add(log.args.tokenId);
-          }
-          if (to < latest) await sleep(400);
-        }
-
+        const ids = await indexedNameIds(wallet, name);
         const next: Holding[] = [];
         for (const tokenId of ids) {
           try {
@@ -110,15 +95,8 @@ export function Portfolio() {
           setHoldings(next);
           setPrimary(lookedUp[1] ? `${lookedUp[0]}.usd` : "none");
         }
-      } catch (cause) {
-        if (!cancelled) {
-          const message = cause instanceof Error ? cause.message : "";
-          setError(
-            /rate limit|exceeds defined limit|429/i.test(message)
-              ? "Arc is limiting name lookups right now. Wait a moment, then reload this page."
-              : message || "Could not read the portfolio.",
-          );
-        }
+      } catch {
+        if (!cancelled) setError("Could not load names just now. Reload this page.");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -128,7 +106,7 @@ export function Portfolio() {
     return () => {
       cancelled = true;
     };
-  }, [address, client, deployment.deployed, deployment.name, deployment.registrar, deployment.reverse, deployment.startBlock, deployment.network]);
+  }, [address, client, deployment.deployed, deployment.name, deployment.registrar, deployment.reverse, deployment.network]);
 
   if (!isConnected || !address) {
     return (

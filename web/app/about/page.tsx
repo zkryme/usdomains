@@ -17,9 +17,8 @@ export default function AboutPage() {
       {xProfile || openSea ? (
         <div className="about-links">
           {xProfile ? (
-            <a href={xProfile} target="_blank" rel="noopener noreferrer">
+            <a href={xProfile} target="_blank" rel="noopener noreferrer" aria-label="X">
               <XLogo />
-              X
             </a>
           ) : null}
           {openSea ? (
