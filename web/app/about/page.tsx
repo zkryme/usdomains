@@ -22,9 +22,8 @@ export default function AboutPage() {
             </a>
           ) : null}
           {openSea ? (
-            <a href={openSea} target="_blank" rel="noopener noreferrer">
+            <a href={openSea} target="_blank" rel="noopener noreferrer" aria-label="OpenSea">
               <OpenSeaLogo />
-              OpenSea
             </a>
           ) : null}
         </div>
