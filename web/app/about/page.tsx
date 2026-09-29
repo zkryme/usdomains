@@ -16,7 +16,9 @@ export default function AboutPage() {
       <div className="about-places" aria-label="Places for links">
         <div>
           <strong>X</strong>
-          <span>Link coming soon</span>
+          <a href="https://x.com/usd_domains" target="_blank" rel="noopener noreferrer">
+            @usd_domains
+          </a>
         </div>
         <div>
           <strong>OpenSea</strong>
